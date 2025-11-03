@@ -1,0 +1,81 @@
+/* === Reset and layout cleanup === */
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: visible !important;
+}
+
+/* === Override jsPsych’s default centering === */
+.jspsych-content-wrapper {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+}
+
+.jspsych-content {
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  overflow: visible !important;
+  position: static !important;
+}
+.jspsych-display-element {
+  transform: none !important;
+  position: static !important;
+}
+#jspsych-target {
+  width: 100%;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: visible !important;
+  position: static !important;
+  z-index: 0;
+}
+
+/* === “Verder” button group — fixed to viewport === */
+.jspsych-btn-group {
+  all: unset !important;             /* reset any inline jsPsych styling */
+  position: fixed !important;
+  bottom: 400px !important;          /* move it up — adjust freely */
+  right: 40px !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+  display: flex !important;
+  gap: 10px !important;
+}
+
+body .jspsych-btn-group {
+  transform: none !important;        /* disable containment issues */
+}
+
+/* === Button appearance === */
+.jspsych-btn {
+  font-size: 20px !important;
+  padding: 15px 40px !important;
+  font-weight: bold !important;
+  border-radius: 8px !important;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2) !important;
+  background-color: #007bff !important;
+  color: #fff !important;
+  border: none !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.jspsych-btn:hover {
+  background-color: #0056b3 !important;
+}
+
+/* === Emotion button override (2-column grid) === */
+#button-container-wrapper .jspsych-btn-group {
+  position: static !important;
+  bottom: auto !important;
+  right: auto !important;
+  z-index: auto !important;
+}
