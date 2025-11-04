@@ -183,6 +183,7 @@ function initializeExperiment() {
         {label:'Direct', value:4},
         {label:'Zeer direct', value:5}
     ];
+    
     const emotionsOptions = ['Woede','Angst','Verwachting','Verrassing','Vreugde','Verdriet','Vertrouwen','Walging']
         .map((e,i)=>({label:e,value:i+1}));
 
@@ -288,16 +289,42 @@ function initializeExperiment() {
         timeline.push(personTrial);
     });
 
-    // ===== Final Screen =====
-    const finalScreen = {
-        type: jsPsychHtmlButtonResponse,
-        stimulus:`<h2>Experiment voltooid!</h2><p>Bedankt voor uw deelname. Uw gegevens worden opgeslagen...</p>`,
-        choices:[]
-    };
-    timeline.push(finalScreen);
+// ===== Final Screen =====
+const finalScreen = {
+    type: jsPsychHtmlKeyboardResponse,
+    stimulus: '<h2>Experiment voltooid!</h2><p>Uw gegevens worden opgeslagen...</p>',
+    choices: jsPsych.NO_KEYS,
+    on_start: function(trial) {
+        // Trigger data saving immediately
+        const data = jsPsych.data.get();
+        const tsvData = convertToTabDelimited(data.values());
 
-    jsPsych.run(timeline);
-}
+        fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ subject_id: subjectId, data: tsvData })
+        })
+        .then(async response => {
+            if (!response.ok) {
+                throw new Error(`Server error: ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(() => {
+            // Update screen with success message
+            document.querySelector('#jspsych-target').innerHTML = 
+                '<h2>Upload succesvol!</h2><p>Bedankt voor uw deelname.</p>';
+        })
+        .catch((err) => {
+            console.error('Upload failed:', err);
+            // Download locally if upload fails
+            downloadData(tsvData, `subj_${subjectId}.txt`);
+            document.querySelector('#jspsych-target').innerHTML = 
+                '<h2>Upload mislukt</h2><p>Uw data is gedownload naar uw computer.</p>';
+        });
+    }
+};
+timeline.push(finalScreen);
 
 // ===== Data saving =====
 function saveData(jsPsych) {
@@ -385,4 +412,4 @@ function downloadData(data,filename){
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
-}
+} } 
