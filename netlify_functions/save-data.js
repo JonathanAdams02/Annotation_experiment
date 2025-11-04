@@ -1,6 +1,5 @@
 const admin = require('firebase-admin');
 
-// List of required env vars
 const requiredEnvVars = [
   'type',
   'project_id',
@@ -14,14 +13,12 @@ const requiredEnvVars = [
   'client_x509_cert_url'
 ];
 
-// Check for missing environment variables
 const missingVars = requiredEnvVars.filter(v => !process.env[v]);
 if (missingVars.length > 0) {
   console.error('Missing environment variables:', missingVars.join(', '));
   throw new Error(`Cannot initialize Firebase Admin SDK. Missing env vars: ${missingVars.join(', ')}`);
 }
 
-// Construct the service account
 const serviceAccount = {
   type: process.env.type,
   project_id: process.env.project_id,
@@ -35,7 +32,6 @@ const serviceAccount = {
   client_x509_cert_url: process.env.client_x509_cert_url
 };
 
-// Initialize Firebase Admin
 if (!admin.apps.length) {
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -45,14 +41,12 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 exports.handler = async function(event, context) {
-  // CORS headers
   const headers = {
-    "Access-Control-Allow-Origin": "*", // Or your GitHub Pages domain
+    "Access-Control-Allow-Origin": "*",
     "Access-Control-Allow-Headers": "Content-Type",
     "Access-Control-Allow-Methods": "POST, OPTIONS"
   };
 
-  // Handle preflight OPTIONS request
   if (event.httpMethod === 'OPTIONS') {
     return { statusCode: 200, headers };
   }
@@ -64,8 +58,9 @@ exports.handler = async function(event, context) {
   try {
     const { subject_id, data } = JSON.parse(event.body);
 
+    // Save exactly what comes from the frontend (tsvData string)
     await db.collection('participants').doc(`subj_${subject_id}`).set({
-      data,
+      data,  // <-- tab-delimited text is stored here
       timestamp: admin.firestore.FieldValue.serverTimestamp()
     });
 
@@ -76,6 +71,10 @@ exports.handler = async function(event, context) {
     };
   } catch (err) {
     console.error('Error saving data to Firestore:', err);
-    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
+    return {
+      statusCode: 500,
+      headers,
+      body: JSON.stringify({ error: err.message })
+    };
   }
 };

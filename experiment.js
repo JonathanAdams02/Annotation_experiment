@@ -365,7 +365,7 @@ function saveData(jsPsych) {
 }
 
 function convertToTabDelimited(data){
-    const emotions = ['Optimisme','Liefde','Onderwerping','Ontzag','Afkeuring','Berouw','Minachting','Agressiviteit'];
+    const headers=['subject_id','trial_number','condition','direct_indirect','video_number','setting_intensiteit','setting_valentie','emotion_choice','directness_rating','person_intensiteit','person_valentie'];
     const trials={};
     data.forEach(row=>{
         if(row.task){
@@ -382,14 +382,14 @@ function convertToTabDelimited(data){
             }
         }
     });
-    const headers=['subject_id','trial_number','condition','direct_indirect','video_number','setting_intensiteit','setting_valentie','emotion_choice','directness_rating','person_intensiteit','person_valentie'];
-    let output=headers.join('\t')+'\n';
+    let output = headers.join('\t') + '\n';
     Object.keys(trials).sort((a,b)=>a-b).forEach(k=>{
         const t=trials[k];
-        output+=headers.map(h=>t[h]!==undefined?t[h]:'').join('\t')+'\n';
+        output += headers.map(h => t[h] !== undefined ? t[h] : '').join('\t') + '\n';
     });
-    return output;
+    return output; // <-- real newlines here
 }
+
 
 function downloadData(data,filename){
     const blob=new Blob([data],{type:'text/plain'});
