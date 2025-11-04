@@ -1,39 +1,85 @@
 const admin = require('firebase-admin');
 
-// Initialize Firebase Admin (reuse credentials from save-data.js)
+const requiredEnvVars = [
+  'type',
+  'project_id',
+  'private_key_id',
+  'private_key',
+  'client_email',
+  'client_id',
+  'auth_uri',
+  'token_uri',
+  'auth_provider_x509_cert_url',
+  'client_x509_cert_url'
+];
+
+const missingVars = requiredEnvVars.filter(v => !process.env[v]);
+if (missingVars.length > 0) {
+  console.error('Missing environment variables:', missingVars.join(', '));
+  throw new Error(`Cannot initialize Firebase Admin SDK. Missing env vars: ${missingVars.join(', ')}`);
+}
+
+const serviceAccount = {
+  type: process.env.type,
+  project_id: process.env.project_id,
+  private_key_id: process.env.private_key_id,
+  private_key: process.env.private_key.replace(/\\n/g, '\n'),
+  client_email: process.env.client_email,
+  client_id: process.env.client_id,
+  auth_uri: process.env.auth_uri,
+  token_uri: process.env.token_uri,
+  auth_provider_x509_cert_url: process.env.auth_provider_x509_cert_url,
+  client_x509_cert_url: process.env.client_x509_cert_url
+};
+
 if (!admin.apps.length) {
   admin.initializeApp({
-    credential: admin.credential.cert({
-      projectId: process.env.FIREBASE_PROJECT_ID,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
-    })
+    credential: admin.credential.cert(serviceAccount)
   });
 }
 
-exports.handler = async (event) => {
+const db = admin.firestore();
+
+exports.handler = async function(event, context) {
+  const headers = {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS"
+  };
+
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
 
   try {
     const demographics = JSON.parse(event.body);
-    
-    // Save to separate "demographics" collection in Firestore
-    await admin.firestore().collection('demographics').doc(demographics.subject_id.toString()).set({
-      ...demographics,
+
+    // Save demographics to separate collection
+    await db.collection('demographics').doc(`subj_${demographics.subject_id}`).set({
+      subject_id: demographics.subject_id,
+      name: demographics.name,
+      student_id: demographics.student_id,
+      age: demographics.age,
+      gender: demographics.gender,
+      handedness: demographics.handedness,
       timestamp: admin.firestore.FieldValue.serverTimestamp()
     });
-    
+
     return {
       statusCode: 200,
-      body: JSON.stringify({ success: true })
+      headers,
+      body: JSON.stringify({ message: 'Demographics saved successfully' })
     };
-  } catch (error) {
-    console.error('Error:', error);
+  } catch (err) {
+    console.error('Error saving demographics to Firestore:', err);
     return {
       statusCode: 500,
-      body: JSON.stringify({ error: 'Failed to save demographics' })
+      headers,
+      body: JSON.stringify({ error: err.message })
     };
   }
 };
