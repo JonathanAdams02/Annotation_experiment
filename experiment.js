@@ -209,7 +209,7 @@ function initializeExperiment() {
                     </div>
                 `;
             },
-            data: { task: 'round1', trial_number: trialNum, subject_id: subjectId },
+            data: { task: 'round1', trial_number: trialNum, subject_id: subjectId, video_filename: pair.original_url },
             on_load: function() {
                 const questions = ['setting','emotion','directness'];
                 const responses = {};
@@ -270,7 +270,7 @@ function initializeExperiment() {
                   </div>
                 `;
             },
-            data: {task:'round2', trial_number:trialNum, subject_id:subjectId},
+            data: {task:'round2', trial_number:trialNum, subject_id:subjectId, video_filename: pair.annotated_url},
             on_load: function(){
                 const container = document.getElementById('person-question-container');
                 createLikertQuestion(container, 'Beoordeel de intensiteit van de OMCIRKELDE PERSOON', intensityOptions, (value1)=>{
@@ -288,43 +288,42 @@ function initializeExperiment() {
         timeline.push(personTrial);
     });
 
-// ===== Final Screen =====
-const finalScreen = {
-    type: jsPsychHtmlButtonResponse,
-    stimulus: `<h2>Experiment voltooid!</h2><p>Klik op "Finish" om uw gegevens op te slaan en af te ronden.</p>`,
-    choices: ['Finish'],
-    on_finish: function() {
-        const data = jsPsych.data.get();
-        const tsvData = convertToTabDelimited(data.values());
+    // ===== Final Screen =====
+    const finalScreen = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `<h2>Experiment voltooid!</h2><p>Klik op "Finish" om uw gegevens op te slaan en af te ronden.</p>`,
+        choices: ['Finish'],
+        on_finish: function() {
+            const data = jsPsych.data.get();
+            const tsvData = convertToTabDelimited(data.values());
 
-        fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ subject_id: subjectId, data: tsvData })
-        })
-        .then(async response => {
-            if (!response.ok) throw new Error(`Server error: ${response.status}`);
-            return response.json();
-        })
-        .then(() => {
-            document.querySelector('#jspsych-target').innerHTML =
-                `<h2>Upload succesvol!</h2>
-                 <p>Bedankt voor uw deelname.</p>`;
-        })
-        .catch((err) => {
-            console.error('Upload failed:', err);
-            downloadData(tsvData, `subj_${subjectId}.txt`);
-            document.querySelector('#jspsych-target').innerHTML =
-                `<h2>Upload mislukt</h2>
-                 <p>Uw data is gedownload naar uw computer.</p>`;
-        });
-    }
-};
-timeline.push(finalScreen);
+            fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ subject_id: subjectId, data: tsvData })
+            })
+            .then(async response => {
+                if (!response.ok) throw new Error(`Server error: ${response.status}`);
+                return response.json();
+            })
+            .then(() => {
+                document.querySelector('#jspsych-target').innerHTML =
+                    `<h2>Upload succesvol!</h2>
+                     <p>Bedankt voor uw deelname.</p>`;
+            })
+            .catch((err) => {
+                console.error('Upload failed:', err);
+                downloadData(tsvData, `subj_${subjectId}.txt`);
+                document.querySelector('#jspsych-target').innerHTML =
+                    `<h2>Upload mislukt</h2>
+                     <p>Uw data is gedownload naar uw computer.</p>`;
+            });
+        }
+    };
+    timeline.push(finalScreen);
 
-
-// ===== Run jsPsych timeline =====
-jsPsych.run(timeline);
+    // ===== Run jsPsych timeline =====
+    jsPsych.run(timeline);
 }
 
 // ===== Data saving =====
@@ -374,19 +373,28 @@ function convertToTabDelimited(data){
             const trialNum = row.trial_number;
 
             if(!trials[trialNum]){
-                const videoUrl = row.task === 'round1' ? row.original_url : row.annotated_url;
                 trials[trialNum] = {
                     subject_id: row.subject_id,
                     trial_number: trialNum,
-                    video_filename: videoUrl
+                    video_filename: ''
                 };
+            }
+
+            // Extract filename from URL and remove _Annotated if present
+            if(row.video_filename){
+                const fullFilename = row.video_filename.split('/').pop(); // Get filename from URL
+                const cleanFilename = fullFilename.replace('_Annotated', ''); // Remove _Annotated
+                trials[trialNum].video_filename = cleanFilename;
             }
 
             if(row.task === 'round1'){
                 if(row.setting_intensiteit !== undefined) trials[trialNum].setting_intensiteit = row.setting_intensiteit;
                 if(row.setting_valentie !== undefined) trials[trialNum].setting_valentie = row.setting_valentie;
                 if(row.directness_rating !== undefined) trials[trialNum].directness_rating = row.directness_rating;
-                if(row.emotion_choice !== undefined) trials[trialNum].emotion_choice = row.emotion_choice;
+                if(row.emotion_choice !== undefined) {
+                    const emotionLabel = ['Woede','Angst','Verwachting','Verrassing','Vreugde','Verdriet','Vertrouwen','Walging'][row.emotion_choice - 1];
+                    trials[trialNum].emotion_choice = emotionLabel || row.emotion_choice;
+                }
             } else if(row.task === 'round2'){
                 trials[trialNum].person_intensiteit = row.person_intensiteit;
                 trials[trialNum].person_valentie = row.person_valentie;
