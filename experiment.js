@@ -341,7 +341,7 @@ shuffledPairs.forEach((pair,index)=>{
 function saveData(jsPsych){
     const data = jsPsych.data.get();
     const tsvData = convertToTabDelimited(data.values());
-    fetch('/.netlify/functions/save-data',{
+    fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data',{
         method:'POST',
         headers:{'Content-Type':'application/json'},
         body: JSON.stringify({subject_id:subjectId, data:tsvData})
