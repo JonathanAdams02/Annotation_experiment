@@ -45,8 +45,20 @@ if (!admin.apps.length) {
 const db = admin.firestore();
 
 exports.handler = async function(event, context) {
+  // CORS headers
+  const headers = {
+    "Access-Control-Allow-Origin": "*", // Or your GitHub Pages domain
+    "Access-Control-Allow-Headers": "Content-Type",
+    "Access-Control-Allow-Methods": "POST, OPTIONS"
+  };
+
+  // Handle preflight OPTIONS request
+  if (event.httpMethod === 'OPTIONS') {
+    return { statusCode: 200, headers };
+  }
+
   if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
+    return { statusCode: 405, headers, body: 'Method Not Allowed' };
   }
 
   try {
@@ -59,10 +71,11 @@ exports.handler = async function(event, context) {
 
     return {
       statusCode: 200,
+      headers,
       body: JSON.stringify({ message: 'Data saved successfully' })
     };
   } catch (err) {
     console.error('Error saving data to Firestore:', err);
-    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
+    return { statusCode: 500, headers, body: JSON.stringify({ error: err.message }) };
   }
 };
