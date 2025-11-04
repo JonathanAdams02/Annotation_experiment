@@ -338,16 +338,30 @@ shuffledPairs.forEach((pair,index)=>{
 }
 
 // ===== Data saving =====
-function saveData(jsPsych){
+function saveData(jsPsych) {
     const data = jsPsych.data.get();
     const tsvData = convertToTabDelimited(data.values());
-    fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data',{
-        method:'POST',
-        headers:{'Content-Type':'application/json'},
-        body: JSON.stringify({subject_id:subjectId, data:tsvData})
-    }).then(r=>r.json())
-    .then(()=>alert('Data opgeslagen! Bedankt voor uw deelname.'))
-    .catch(()=>{downloadData(tsvData, `subj_${subjectId}.txt`); alert('Data gedownload naar uw computer.');});
+
+    fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ subject_id: subjectId, data: tsvData })
+    })
+    .then(async response => {
+        if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(() => {
+        alert('Data opgeslagen! Bedankt voor uw deelname.');
+    })
+    .catch((err) => {
+        console.error('Upload failed:', err);
+        // Fallback: download locally
+        downloadData(tsvData, `subj_${subjectId}.txt`);
+        alert('Upload mislukt. Data gedownload naar uw computer.');
+    });
 }
 
 function convertToTabDelimited(data){
