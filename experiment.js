@@ -365,29 +365,54 @@ function saveData(jsPsych) {
 }
 
 function convertToTabDelimited(data){
-    const headers=['subject_id','trial_number','condition','direct_indirect','video_number','setting_intensiteit','setting_valentie','emotion_choice','directness_rating','person_intensiteit','person_valentie'];
-    const trials={};
-    data.forEach(row=>{
+    const headers = [
+        'subject_id',
+        'trial_number',
+        'video_filename',
+        'setting_intensiteit',
+        'setting_valentie',
+        'emotion_choice',
+        'directness_rating',
+        'person_intensiteit',
+        'person_valentie'
+    ];
+
+    const trials = {};
+
+    data.forEach(row => {
         if(row.task){
-            const trialNum=row.trial_number;
-            if(!trials[trialNum]) trials[trialNum]={subject_id:row.subject_id, trial_number:row.trial_number, condition:row.condition, direct_indirect:row.type, video_number:row.video_number};
-            if(row.task==='round1'){
-                if(row.setting_intensiteit!==undefined) trials[trialNum].setting_intensiteit=row.setting_intensiteit;
-                if(row.setting_valentie!==undefined) trials[trialNum].setting_valentie=row.setting_valentie;
-                if(row.directness_rating!==undefined) trials[trialNum].directness_rating=row.directness_rating;
-                if(row.emotion_choice!==undefined) trials[trialNum].emotion_choice=row.emotion_choice;
-            } else if(row.task==='round2'){
-                trials[trialNum].person_intensiteit=row.person_intensiteit;
-                trials[trialNum].person_valentie=row.person_valentie;
+            const trialNum = row.trial_number;
+
+            if(!trials[trialNum]){
+                // Choose the video URL based on the round
+                const videoUrl = row.task === 'round1' ? row.original_url : row.annotated_url;
+                trials[trialNum] = {
+                    subject_id: row.subject_id,
+                    trial_number: trialNum,
+                    video_filename: videoUrl
+                };
+            }
+
+            if(row.task === 'round1'){
+                if(row.setting_intensiteit !== undefined) trials[trialNum].setting_intensiteit = row.setting_intensiteit;
+                if(row.setting_valentie !== undefined) trials[trialNum].setting_valentie = row.setting_valentie;
+                if(row.directness_rating !== undefined) trials[trialNum].directness_rating = row.directness_rating;
+                if(row.emotion_choice !== undefined) trials[trialNum].emotion_choice = row.emotion_choice;
+            } else if(row.task === 'round2'){
+                trials[trialNum].person_intensiteit = row.person_intensiteit;
+                trials[trialNum].person_valentie = row.person_valentie;
             }
         }
     });
+
+    // Build tab-delimited output
     let output = headers.join('\t') + '\n';
-    Object.keys(trials).sort((a,b)=>a-b).forEach(k=>{
-        const t=trials[k];
+    Object.keys(trials).sort((a,b) => a-b).forEach(k => {
+        const t = trials[k];
         output += headers.map(h => t[h] !== undefined ? t[h] : '').join('\t') + '\n';
     });
-    return output; // <-- real newlines here
+
+    return output;
 }
 
 
