@@ -1,6 +1,3 @@
-console.log('Experiment JS loaded');
-alert('Experiment JS loaded');
-
 // Generate random 4-digit subject ID
 const subjectId = Math.floor(1000 + Math.random() * 9000);
 
@@ -293,15 +290,13 @@ function initializeExperiment() {
 
 // ===== Final Screen =====
 const finalScreen = {
-    type: jsPsychHtmlKeyboardResponse,
-    stimulus: '<h2>Experiment voltooid!</h2><p>Uw gegevens worden opgeslagen...</p>',
-    choices: "NO_KEYS", // v7 compatible
-    on_start: function() {
-        // Get the data as TSV
+    type: jsPsychHtmlButtonResponse,
+    stimulus: `<h2>Experiment voltooid!</h2><p>Klik op "Finish" om uw gegevens op te slaan en af te ronden.</p>`,
+    choices: ['Finish'],
+    on_finish: function() {
         const data = jsPsych.data.get();
         const tsvData = convertToTabDelimited(data.values());
 
-        // Attempt to upload
         fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-data', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
@@ -309,22 +304,27 @@ const finalScreen = {
         })
         .then(async response => {
             if (!response.ok) throw new Error(`Server error: ${response.status}`);
-            await response.json();
-            // Success message
+            return response.json();
+        })
+        .then(() => {
             document.querySelector('#jspsych-target').innerHTML =
-                '<h2>Upload succesvol!</h2><p>Bedankt voor uw deelname.</p>';
+                `<h2>Upload succesvol!</h2>
+                 <p>Bedankt voor uw deelname.</p>`;
         })
         .catch((err) => {
             console.error('Upload failed:', err);
-            // Download locally if upload fails
             downloadData(tsvData, `subj_${subjectId}.txt`);
             document.querySelector('#jspsych-target').innerHTML =
-                '<h2>Upload mislukt</h2><p>Uw data is gedownload naar uw computer.</p>';
+                `<h2>Upload mislukt</h2>
+                 <p>Uw data is gedownload naar uw computer.</p>`;
         });
     }
 };
-
 timeline.push(finalScreen);
+
+
+// ===== Run jsPsych timeline =====
+jsPsych.run(timeline);
 }
 
 // ===== Data saving =====
