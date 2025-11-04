@@ -1,3 +1,6 @@
+console.log('Experiment JS loaded');
+alert('Experiment JS loaded');
+
 // Generate random 4-digit subject ID
 const subjectId = Math.floor(1000 + Math.random() * 9000);
 
