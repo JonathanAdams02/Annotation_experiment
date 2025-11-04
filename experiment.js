@@ -135,196 +135,158 @@ function initializeExperiment() {
         document.body.appendChild(button);
     }
 
+    // ===== Helper: Likert creation =====
+    function createLikertQuestion(container, questionText, options, callback) {
+        container.innerHTML = `<p style="font-size:24px; font-weight:bold;">${questionText}</p>`;
+        const btnContainer = document.createElement('div');
+        btnContainer.style = 'display:flex; flex-direction:column; gap:10px; margin-top:15px;';
+        container.appendChild(btnContainer);
+        options.forEach(option => {
+            const btn = document.createElement('button');
+            btn.textContent = option.label;
+            btn.style.cssText = `
+                padding:15px;
+                font-size:18px;
+                font-weight:bold;
+                border-radius:6px;
+                border:none;
+                cursor:pointer;
+                background-color:#007bff;
+                color:white;
+            `;
+            btn.addEventListener('mouseenter', () => btn.style.backgroundColor='#0056b3');
+            btn.addEventListener('mouseleave', () => btn.style.backgroundColor='#007bff');
+            btn.addEventListener('click', () => callback(option.value));
+            btnContainer.appendChild(btn);
+        });
+    }
+
+    // ===== Likert options =====
+    const intensityOptions = [
+        {label:'Zeer rustig', value:1},
+        {label:'Rustig', value:2},
+        {label:'Gemiddeld', value:3},
+        {label:'Intens', value:4},
+        {label:'Zeer intens', value:5}
+    ];
+    const valenceOptions = [
+        {label:'Zeer negatief', value:1},
+        {label:'Negatief', value:2},
+        {label:'Neutraal', value:3},
+        {label:'Positief', value:4},
+        {label:'Zeer positief', value:5}
+    ];
+    const directnessOptions = [
+        {label:'Zeer indirect', value:1},
+        {label:'Indirect', value:2},
+        {label:'Neutraal', value:3},
+        {label:'Direct', value:4},
+        {label:'Zeer direct', value:5}
+    ];
+    const emotionsOptions = ['Woede','Angst','Verwachting','Verrassing','Vreugde','Verdriet','Vertrouwen','Walging']
+        .map((e,i)=>({label:e,value:i+1}));
+
     // ===== Timeline =====
     let timeline = [];
     timeline.push(welcome);
     timeline.push(instructionsRound1);
 
-// ===== ROUND 1: Original videos (persistent video) =====
-shuffledPairs.forEach((pair, index) => {
-    const trialNum = index + 1;
+    // ===== ROUND 1: Original videos =====
+    shuffledPairs.forEach((pair, index) => {
+        const trialNum = index + 1;
+        const round1Trial = {
+            type: jsPsychHtmlButtonResponse,
+            choices: [],
+            stimulus: function() {
+                return `
+                    <div style="display:flex; height:100vh; width:100vw;">
+                      <div style="flex:0 0 40%; padding:10px;">
+                        <video id="video-player" autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
+                          <source src="${pair.original_url}" type="video/mp4">
+                        </video>
+                      </div>
+                      <div id="question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+                    </div>
+                `;
+            },
+            data: { task: 'round1', trial_number: trialNum, subject_id: subjectId },
+            on_load: function() {
+                const questions = ['setting','emotion','directness'];
+                const responses = {};
+                let qIndex = 0;
+                const container = document.getElementById('question-container');
 
-    const round1Trial = {
-        type: jsPsychHtmlButtonResponse,
-        choices: [],
-        stimulus: function() {
-            return `
-                <div style="display:flex; height:100vh; width:100vw;">
-                  <div style="flex:0 0 40%; padding:10px;">
-                    <video id="video-player" autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
-                      <source src="${pair.original_url}" type="video/mp4">
-                    </video>
-                  </div>
-                  <div id="question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
-                </div>
-            `;
-        },
-        data: { task: 'round1', trial_number: trialNum, subject_id: subjectId },
-        on_load: function() {
-            const questions = ['setting','emotion','directness'];
-            const responses = {};
-            let qIndex = 0;
-            const container = document.getElementById('question-container');
-
-            function showQuestion() {
-                container.innerHTML = '';
-                if(questions[qIndex]==='setting'){
-                    const randomSettingIntensiteit = Math.floor(Math.random() * 101);
-                    const randomSettingValentie = Math.floor(Math.random() * 101);
-                    window.currentSettingIntensiteit = randomSettingIntensiteit;
-                    window.currentSettingValentie = randomSettingValentie;
-
-                    container.innerHTML = `
-                      <p style="font-size:24px; font-weight:bold;">Beoordeel de <strong>SETTING</strong> van deze video</p>
-                      <p>De setting is alles behalve de gezichten of lichaamstaal van de personen.</p>
-                      <label>Intensiteit</label>
-                      <input type="range" id="intensiteit-slider" min="0" max="100" value="${randomSettingIntensiteit}">
-                      <p id="intensiteit-value"> ${randomSettingIntensiteit}</p>
-                      <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Niet intens</span><span>Zeer intens</span></div>
-
-                      <label>Valentie</label>
-                      <input type="range" id="valentie-slider" min="0" max="100" value="${randomSettingValentie}">
-                      <p id="valentie-value">${randomSettingValentie}</p>
-                      <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Negatief</span><span>Positief</span></div>
-                    `;
-                } else if(questions[qIndex]==='emotion'){
-                    const emotions = ['Optimisme','Liefde','Onderwerping','Ontzag','Afkeuring','Berouw','Minachting','Agressiviteit'];
-                    container.innerHTML = `<p style="font-size:24px; font-weight:bold;">Welke emotie past het best bij deze video?</p>`;
-                    const btnContainer = document.createElement('div');
-                    btnContainer.style = 'display:grid; grid-template-columns:1fr 1fr; gap:15px;';
-                    container.appendChild(btnContainer);
-                    emotions.forEach(em => {
-                        const btn = document.createElement('button');
-                        btn.textContent = em;
-                        btn.style.cssText = 'padding:20px; font-size:20px; font-weight:bold; background-color:#007bff; color:white; border:none; border-radius:8px; cursor:pointer;';
-                        btn.addEventListener('click', ()=>{ responses.emotion_choice = em; nextQuestion(); });
-                        btnContainer.appendChild(btn);
-                    });
-                    return;
-                } else if(questions[qIndex]==='directness'){
-                    const randomDirectness = Math.floor(Math.random() * 101);
-                    window.currentDirectness = randomDirectness;
-                    container.innerHTML = `
-                      <p style="font-size:24px; font-weight:bold;">Vindt u de interactie tussen de personen meer indirect of direct?</p>
-                      <input type="range" id="directness-slider" min="0" max="100" value="${randomDirectness}">
-                      <p id="directness-value"> ${randomDirectness}</p>
-                      <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Indirect</span><span>Direct</span></div>
-                    `;
-                }
-
-                if(questions[qIndex]!=='emotion'){
-                    // Add live slider updates
+                function showQuestion() {
+                    container.innerHTML = '';
                     if(questions[qIndex]==='setting'){
-                        const intensSlider = document.getElementById('intensiteit-slider');
-                        const valSlider = document.getElementById('valentie-slider');
-                        const intensValue = document.getElementById('intensiteit-value');
-                        const valValue = document.getElementById('valentie-value');
-
-                        intensSlider.addEventListener('input', e=>{
-                            window.currentSettingIntensiteit = parseInt(e.target.value);
-                            intensValue.textContent =  e.target.value;
+                        createLikertQuestion(container, 'Beoordeel de intensiteit van de SETTING van deze video', intensityOptions, (value1)=>{
+                            responses.setting_intensiteit = value1;
+                            createLikertQuestion(container, 'Beoordeel de valentie van de SETTING van deze video', valenceOptions, (value2)=>{
+                                responses.setting_valentie = value2;
+                                nextQuestion();
+                            });
                         });
-                        valSlider.addEventListener('input', e=>{
-                            window.currentSettingValentie = parseInt(e.target.value);
-                            valValue.textContent =  e.target.value;
+                    } else if(questions[qIndex]==='emotion'){
+                        createLikertQuestion(container, 'Welke emotie past het best bij deze video?', emotionsOptions, (value)=>{
+                            responses.emotion_choice = value;
+                            nextQuestion();
                         });
                     } else if(questions[qIndex]==='directness'){
-                        const slider = document.getElementById('directness-slider');
-                        const value = document.getElementById('directness-value');
-                        slider.addEventListener('input', e=>{
-                            window.currentDirectness = parseInt(e.target.value);
-                            value.textContent =  e.target.value;
+                        createLikertQuestion(container, 'Vindt u de interactie tussen de personen meer indirect of direct?', directnessOptions, (value)=>{
+                            responses.directness_rating = value;
+                            nextQuestion();
                         });
                     }
-
-                    createVerderButton('Verder', ()=>{
-                        if(questions[qIndex]==='setting'){
-                            responses.setting_intensiteit = window.currentSettingIntensiteit;
-                            responses.setting_valentie = window.currentSettingValentie;
-                        } else if(questions[qIndex]==='directness'){
-                            responses.directness_rating = window.currentDirectness;
-                        }
-                        nextQuestion();
-                    });
                 }
+
+                function nextQuestion(){
+                    qIndex++;
+                    if(qIndex<questions.length){ showQuestion(); }
+                    else{ jsPsych.finishTrial(responses); }
+                }
+
+                showQuestion();
             }
+        };
+        timeline.push(round1Trial);
+    });
 
-            function nextQuestion(){
-                qIndex++;
-                if(qIndex<questions.length){ showQuestion(); }
-                else{ jsPsych.finishTrial(responses); }
-            }
-
-            showQuestion();
-        }
-    };
-
-    timeline.push(round1Trial);
-});
-
-
-
-// ===== ROUND 2: Annotated videos =====
-timeline.push(instructionsRound2);
-shuffledPairs.forEach((pair,index)=>{
-    const trialNum = index+1;
-    const personTrial = {
-        type: jsPsychHtmlButtonResponse,
-        choices: [],
-        stimulus: function(){
-            const randomPersonIntensiteit = Math.floor(Math.random() * 101);
-            const randomPersonValentie = Math.floor(Math.random() * 101);
-            window.currentPersonIntensiteit = randomPersonIntensiteit;
-            window.currentPersonValentie = randomPersonValentie;
-
-            return `
-              <div style="display:flex; height:100vh; width:100vw;">
-                <div style="flex:0 0 40%; padding:10px;">
-                  <video autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
-                    <source src="${pair.annotated_url}" type="video/mp4">
-                  </video>
-                </div>
-                <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;">
-                  <p style="font-size:24px; font-weight:bold;">Beoordeel de OMCIRKELDE PERSOON</p>
-                  <label>Intensiteit</label>
-                  <input type="range" id="person-intensiteit-slider" min="0" max="100" value="${randomPersonIntensiteit}">
-                  <p id="person-intensiteit-value"> ${randomPersonIntensiteit}</p>
-                  <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Niet intens</span><span>Zeer intens</span></div>
-
-                  <label>Valentie</label>
-                  <input type="range" id="person-valentie-slider" min="0" max="100" value="${randomPersonValentie}">
-                  <p id="person-valentie-value"> ${randomPersonValentie}</p>
-                  <div style="display:flex; justify-content:space-between; font-size:14px;"><span>Negatief</span><span>Positief</span></div>
-                </div>
-              </div>
-            `;
-        },
-        data: {task:'round2', trial_number:trialNum, subject_id:subjectId},
-        on_load: function(){
-            const intensSlider = document.getElementById('person-intensiteit-slider');
-            const valSlider = document.getElementById('person-valentie-slider');
-            const intensValue = document.getElementById('person-intensiteit-value');
-            const valValue = document.getElementById('person-valentie-value');
-
-            intensSlider.addEventListener('input', e => {
-                window.currentPersonIntensiteit = parseInt(e.target.value);
-                intensValue.textContent =  e.target.value;
-            });
-            valSlider.addEventListener('input', e => {
-                window.currentPersonValentie = parseInt(e.target.value);
-                valValue.textContent = e.target.value;
-            });
-
-            createVerderButton('Verder', ()=>{
-                jsPsych.finishTrial({
-                    person_intensiteit: window.currentPersonIntensiteit,
-                    person_valentie: window.currentPersonValentie
+    // ===== ROUND 2: Annotated videos =====
+    timeline.push(instructionsRound2);
+    shuffledPairs.forEach((pair,index)=>{
+        const trialNum = index+1;
+        const personTrial = {
+            type: jsPsychHtmlButtonResponse,
+            choices: [],
+            stimulus: function(){
+                return `
+                  <div style="display:flex; height:100vh; width:100vw;">
+                    <div style="flex:0 0 40%; padding:10px;">
+                      <video autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
+                        <source src="${pair.annotated_url}" type="video/mp4">
+                      </video>
+                    </div>
+                    <div id="person-question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+                  </div>
+                `;
+            },
+            data: {task:'round2', trial_number:trialNum, subject_id:subjectId},
+            on_load: function(){
+                const container = document.getElementById('person-question-container');
+                createLikertQuestion(container, 'Beoordeel de intensiteit van de OMCIRKELDE PERSOON', intensityOptions, (value1)=>{
+                    const personIntensiteit = value1;
+                    createLikertQuestion(container, 'Beoordeel de valentie van de OMCIRKELDE PERSOON', valenceOptions, (value2)=>{
+                        const personValentie = value2;
+                        jsPsych.finishTrial({
+                            person_intensiteit: personIntensiteit,
+                            person_valentie: personValentie
+                        });
+                    });
                 });
-            });
-        }
-    };
-    timeline.push(personTrial);
-});
+            }
+        };
+        timeline.push(personTrial);
+    });
 
     // ===== Final Screen =====
     const finalScreen = {
@@ -384,7 +346,6 @@ function convertToTabDelimited(data){
             const trialNum = row.trial_number;
 
             if(!trials[trialNum]){
-                // Choose the video URL based on the round
                 const videoUrl = row.task === 'round1' ? row.original_url : row.annotated_url;
                 trials[trialNum] = {
                     subject_id: row.subject_id,
@@ -405,7 +366,6 @@ function convertToTabDelimited(data){
         }
     });
 
-    // Build tab-delimited output
     let output = headers.join('\t') + '\n';
     Object.keys(trials).sort((a,b) => a-b).forEach(k => {
         const t = trials[k];
@@ -414,7 +374,6 @@ function convertToTabDelimited(data){
 
     return output;
 }
-
 
 function downloadData(data,filename){
     const blob=new Blob([data],{type:'text/plain'});
