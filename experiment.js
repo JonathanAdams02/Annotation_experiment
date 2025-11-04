@@ -187,9 +187,38 @@ function initializeExperiment() {
         .map((e,i)=>({label:e,value:i+1}));
 
     // ===== Timeline =====
-    let timeline = [];
-    timeline.push(welcome);
-    timeline.push(instructionsRound1);
+let timeline = [];
+timeline.push(welcome);
+
+// ADD DEMOGRAPHICS SURVEY HERE
+const demographicsSurvey = {
+    type: jsPsychSurveyText,
+    questions: [
+        {prompt: "Wat is uw volledige naam?", name: 'name', required: true},
+        {prompt: "Wat is uw studentnummer?", name: 'student_id', required: true},
+        {prompt: "Wat is uw leeftijd?", name: 'age', required: true},
+        {prompt: "Wat is uw geslacht? (Man/Vrouw/Anders)", name: 'gender', required: true},
+        {prompt: "Wat is uw handvoorkeur? (Links/Rechts/Beide)", name: 'handedness', required: true}
+    ],
+    data: {
+        task: 'demographics',
+        subject_id: subjectId
+    },
+    on_finish: function(data) {
+        saveDemographics({
+            subject_id: subjectId,
+            name: data.response.name,
+            student_id: data.response.student_id,
+            age: data.response.age,
+            gender: data.response.gender,
+            handedness: data.response.handedness,
+            timestamp: new Date().toISOString()
+        });
+    }
+};
+
+timeline.push(demographicsSurvey);  // Add demographics to timeline
+timeline.push(instructionsRound1);
 
     // ===== ROUND 1: Original videos =====
     shuffledPairs.forEach((pair, index) => {
@@ -350,6 +379,31 @@ function saveData(jsPsych) {
         // Fallback: download locally
         downloadData(tsvData, `subj_${subjectId}.txt`);
         alert('Upload mislukt. Data gedownload naar uw computer.');
+    });
+}
+function saveDemographics(demographics) {
+    fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-demographics', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(demographics)
+    })
+    .then(response => response.json())
+    .then(result => {
+        console.log('Demographics saved successfully');
+    })
+    .catch(error => {
+        console.error('Demographics save failed:', error);
+        // Backup: download locally if upload fails
+        const demoText = `Subject ID: ${demographics.subject_id}\nName: ${demographics.name}\nStudent ID: ${demographics.student_id}\nAge: ${demographics.age}\nGender: ${demographics.gender}\nHandedness: ${demographics.handedness}\nTimestamp: ${demographics.timestamp}`;
+        const blob = new Blob([demoText], {type: 'text/plain'});
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `demographics_${demographics.subject_id}.txt`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
     });
 }
 
