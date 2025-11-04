@@ -293,7 +293,7 @@ function initializeExperiment() {
 const finalScreen = {
     type: jsPsychHtmlKeyboardResponse,
     stimulus: '<h2>Experiment voltooid!</h2><p>Uw gegevens worden opgeslagen...</p>',
-    choices: jsPsych.NO_KEYS,
+    choices: "NO_KEYS",
     on_start: function(trial) {
         // Trigger data saving immediately
         const data = jsPsych.data.get();
