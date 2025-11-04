@@ -1,0 +1,8 @@
+[build]
+  # This is where your build command would go if you have one
+  # For plain JS/HTML experiment, you can leave it empty
+  publish = "."
+
+[functions]
+  # Tell Netlify where your functions live
+  directory = "netlify_functions"
