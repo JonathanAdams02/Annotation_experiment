@@ -230,7 +230,7 @@ timeline.push(instructionsRound1);
                 return `
                     <div style="display:flex; height:100vh; width:100vw;">
                       <div style="flex:0 0 40%; padding:10px;">
-                        <video id="video-player" autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
+                        <video id="video-player" autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
                           <source src="${pair.original_url}" type="video/mp4">
                         </video>
                       </div>
@@ -291,7 +291,7 @@ timeline.push(instructionsRound1);
                 return `
                   <div style="display:flex; height:100vh; width:100vw;">
                     <div style="flex:0 0 40%; padding:10px;">
-                      <video autoplay loop controls style="width:100%; height:100%; object-fit:contain;">
+                      <video autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
                         <source src="${pair.annotated_url}" type="video/mp4">
                       </video>
                     </div>
