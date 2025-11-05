@@ -107,12 +107,11 @@ function initializeExperiment() {
             <p>De <strong>setting</strong> van een video omvat alle visuele elementen <em>behalve</em> de personen zelf. Dit zijn alle contextuele aspecten die de sfeer en omgeving bepalen.</p>
             
             <h3>Voorbeelden van setting:</h3>
-            <ul>
+           
                 <li><strong>Locatie:</strong> Een strand, kerk, ziekenhuis, kantoor</li>
                 <li><strong>Kleding:</strong> Formele pakken, zwemkleding, rouwkleding</li>
                 <li><strong>Decoratie:</strong> Ballonnen en confetti (feest), bloemen en kaarsen (herdenkingsplechtigheid)</li>
                 <li><strong>Algemene sfeer:</strong> Feestelijke verlichting vs. sobere ruimte</li>
-            </ul>
             
             <p><strong>Belangrijk:</strong> Probeer bij het beoordelen van de setting de gezichtsuitdrukkingen en lichaamstaal van de mensen te negeren. Focus alleen op wat er <em>om de mensen heen</em> gebeurt.</p>
             
@@ -141,11 +140,11 @@ function initializeExperiment() {
             <p>Bij het beoordelen van een <strong>persoon</strong> focust u zich uitsluitend op de individuele emotionele uitdrukking van die persoon, los van de omgeving.</p>
             
             <h3>Voorbeelden van persoonlijke kenmerken:</h3>
-            <ul>
+            
                 <li><strong>Gezichtsuitdrukking:</strong> Glimlach, frons, tranen, blik</li>
                 <li><strong>Lichaamstaal:</strong> Houding, gebaren, spanning in het lichaam</li>
                 <li><strong>Emotionele expressie:</strong> Blijdschap, verdriet, boosheid, angst</li>
-            </ul>
+           
         
             <p><strong>Belangrijk:</strong> Negeer bij het beoordelen van de persoon volledig wat er in de achtergrond gebeurt. Een persoon kan bijvoorbeeld verdrietig kijken tijdens een feest, of blij kijken op een begrafenis. Focus alleen op de persoon zelf.</p>
             
