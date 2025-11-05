@@ -83,13 +83,37 @@ function initializeExperiment() {
             <p>Voor elke video beantwoordt u drie vragen:</p>
             <ul style="list-style-type:none; padding-left:0;">
               <li><strong>Intensiteit en valentie van de setting</strong><br>
-                  De <em>setting</em> is alles wat u ziet behalve de gezichten of lichaamstaal van de personen. Denk aan kleding, omgeving en de gebeurtenis (bijv. feest, begrafenis, bruiloft).</li>
+                  De <em>setting</em> is alles wat u ziet behalve de gezichten of lichaamstaal van de personen. Denk aan kleding en omgeving. Probeer hierbij de gezichten en lichaamstaal van mensen te negeren.</li>
               <li><strong>De emotie van de video als geheel</strong><br>
-                  Welke emotie past volgens u het best bij de totale video?</li>
+                  Welke emotie past volgens u het best bij de totale video? Let op: dit gaat over de video in zijn geheel, niet alleen de setting.</li>
               <li><strong>De directheid van de sociale interactie</strong><br>
-                  Vindt u de interactie tussen de personen in de video meer indirect of direct?</li>
+                  Is de interactie tussen de personen direct of indirect?<br>
+                  <em>Direct</em> betekent dat mensen actief met elkaar communiceren.<br>
+                  <em>Indirect</em> betekent dat mensen bij elkaar zijn maar niet direct met elkaar interacteren.</li>
             </ul>
-            <p>Klik op "Verder" om te beginnen.</p>
+            <p>Klik op "Verder" voor meer uitleg over de setting.</p>
+        `,
+        choices: ['Verder']
+    };
+
+    const settingExplanation = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <h2>Wat is de setting van een video?</h2>
+            <p>De <strong>setting</strong> van een video omvat alle visuele elementen <em>behalve</em> de personen zelf. Dit zijn alle contextuele aspecten die de sfeer en omgeving bepalen.</p>
+            
+            <h3>Voorbeelden van setting:</h3>
+            
+                <li><strong>Locatie:</strong> Een strand, kerk, ziekenhuis, kantoor</li>
+                <li><strong>Kleding:</strong> Formele pakken, zwemkleding, rouwkleding</li>
+                <li><strong>Decoratie:</strong> Ballonnen en confetti (feest), bloemen en kaarsen (herdenkingsplechtigheid)</li>
+                <li><strong>Algemene sfeer:</strong> Feestelijke verlichting vs. sobere ruimte</li>
+            
+            
+            <p><strong>Belangrijk:</strong> Probeer bij het beoordelen van de setting de gezichtsuitdrukkingen en lichaamstaal van de mensen te negeren. Focus alleen op wat er <em>om de mensen heen</em> gebeurt.</p>
+            
+            <p style="margin-top: 30px; font-style: italic;">U kunt deze uitleg altijd raadplegen via de groene knop rechtsboven tijdens het experiment.</p>
+            <p>Klik op "Verder" om te beginnen met de video's.</p>
         `,
         choices: ['Verder']
     };
@@ -98,9 +122,31 @@ function initializeExperiment() {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
             <h2>Instructies – Tweede ronde</h2>
-            <p>In dit deel ziet u dezelfde video's opnieuw, maar nu is één persoon omcirkeld.</p>
-            <p>Beoordeel voor elke video de <strong>intensiteit</strong> en <strong>valentie</strong> van de <strong>omcirkelde persoon</strong>. Probeer de setting te negeren.</p>
-            <p>Klik op "Verder" om te beginnen.</p>
+            <p>In dit deel ziet u dezelfde video's opnieuw, maar nu is één persoon omlijnd.</p>
+            <p>Nu richt u zich <strong>alleen op de omlijnd persoon</strong>. Beoordeel voor elke video de <strong>intensiteit</strong> en <strong>valentie</strong> van deze persoon.</p>
+            <p><strong>Let op:</strong> Negeer de setting volledig en focus uitsluitend op de gezichtsuitdrukking en lichaamstaal van de omlijnd persoon.</p>
+            <p>Klik op "Verder" voor meer uitleg over het beoordelen van personen.</p>
+        `,
+        choices: ['Verder']
+    };
+
+    const personExplanation = {
+        type: jsPsychHtmlButtonResponse,
+        stimulus: `
+            <h2>Wat zijn de kenmerken van een persoon?</h2>
+            <p>Bij het beoordelen van een <strong>persoon</strong> focust u zich uitsluitend op de individuele emotionele uitdrukking van die persoon, los van de omgeving.</p>
+            
+            <h3>Voorbeelden van persoonlijke kenmerken:</h3>
+            
+                <li><strong>Gezichtsuitdrukking:</strong> Glimlach, frons, tranen, blik</li>
+                <li><strong>Lichaamstaal:</strong> Houding, gebaren, spanning in het lichaam</li>
+                <li><strong>Emotionele expressie:</strong> Blijdschap, verdriet, boosheid, angst</li>
+            
+        
+            <p><strong>Belangrijk:</strong> Negeer bij het beoordelen van de persoon volledig wat er in de achtergrond gebeurt. Een persoon kan bijvoorbeeld verdrietig kijken tijdens een feest, of blij kijken op een begrafenis. Focus alleen op de persoon zelf.</p>
+            
+            <p style="margin-top: 30px; font-style: italic;">U kunt deze uitleg altijd raadplegen via de groene knop rechtsboven tijdens het experiment.</p>
+            <p>Klik op "Verder" om door te gaan met de tweede ronde.</p>
         `,
         choices: ['Verder']
     };
@@ -161,6 +207,96 @@ function initializeExperiment() {
         });
     }
 
+    // ===== Helper: Create explanation popup =====
+    function showExplanation(type) {
+        // Remove existing popup if any
+        const existing = document.getElementById('explanation-popup');
+        if (existing) existing.remove();
+        
+        // Create overlay
+        const overlay = document.createElement('div');
+        overlay.id = 'explanation-popup';
+        overlay.style.cssText = `
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background-color: rgba(0,0,0,0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 10000;
+        `;
+        
+        // Create popup content
+        const popup = document.createElement('div');
+        popup.style.cssText = `
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        `;
+        
+        let content = '';
+        if (type === 'setting') {
+            content = `
+                <h3 style="margin-top:0;">Wat is de setting van een video?</h3>
+                <p>De <strong>setting</strong> van een video omvat alle visuele elementen <em>behalve</em> de personen zelf. Dit zijn alle contextuele aspecten die de sfeer en omgeving bepalen.</p>
+                
+                <h4>Voorbeelden van setting:</h4>
+                <ul>
+                    <li><strong>Locatie:</strong> Een strand, kerk, ziekenhuis, kantoor</li>
+                    <li><strong>Kleding:</strong> Formele pakken, zwemkleding, rouwkleding</li>
+                    <li><strong>Decoratie:</strong> Ballonnen en confetti (feest), bloemen en kaarsen (herdenkingsplechtigheid)</li>
+                    <li><strong>Algemene sfeer:</strong> Feestelijke verlichting vs. sobere ruimte</li>
+                </ul>
+                
+                <p><strong>Belangrijk:</strong> Probeer bij het beoordelen van de setting de gezichtsuitdrukkingen en lichaamstaal van de mensen te negeren. Focus alleen op wat er <em>om de mensen heen</em> gebeurt.</p>
+            `;
+        } else if (type === 'person') {
+            content = `
+                <h3 style="margin-top:0;">Wat zijn de kenmerken van een persoon?</h3>
+                <p>Bij het beoordelen van een <strong>persoon</strong> focust u zich uitsluitend op de individuele emotionele uitdrukking van die persoon, los van de omgeving.</p>
+                
+                <h4>Voorbeelden van persoonlijke kenmerken:</h4>
+                <ul>
+                    <li><strong>Gezichtsuitdrukking:</strong> Glimlach, frons, tranen, blik</li>
+                    <li><strong>Lichaamstaal:</strong> Houding, gebaren, spanning in het lichaam</li>
+                    <li><strong>Emotionele expressie:</strong> Blijdschap, verdriet, boosheid, angst</li>
+                </ul>
+                
+                <p><strong>Belangrijk:</strong> Negeer bij het beoordelen van de persoon volledig wat er in de achtergrond gebeurt. Een persoon kan bijvoorbeeld verdrietig kijken tijdens een feest, of blij kijken op een begrafenis. Focus alleen op de persoon zelf.</p>
+            `;
+        }
+        
+        popup.innerHTML = content + `
+            <button id="close-explanation" style="
+                margin-top: 20px;
+                padding: 10px 30px;
+                font-size: 16px;
+                font-weight: bold;
+                background-color: #007bff;
+                color: white;
+                border: none;
+                border-radius: 6px;
+                cursor: pointer;
+            ">Sluiten</button>
+        `;
+        
+        overlay.appendChild(popup);
+        document.body.appendChild(overlay);
+        
+        // Close handlers
+        document.getElementById('close-explanation').addEventListener('click', () => overlay.remove());
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) overlay.remove();
+        });
+    }
+
     // ===== Likert options =====
     const intensityOptions = [
         {label:'Zeer rustig', value:1},
@@ -187,38 +323,39 @@ function initializeExperiment() {
         .map((e,i)=>({label:e,value:i+1}));
 
     // ===== Timeline =====
-let timeline = [];
-timeline.push(welcome);
+    let timeline = [];
+    timeline.push(welcome);
 
-// ADD DEMOGRAPHICS SURVEY HERE
-const demographicsSurvey = {
-    type: jsPsychSurveyText,
-    questions: [
-        {prompt: "Wat is uw volledige naam?", name: 'name', required: true},
-        {prompt: "Wat is uw studentnummer?", name: 'student_id', required: true},
-        {prompt: "Wat is uw leeftijd?", name: 'age', required: true},
-        {prompt: "Wat is uw geslacht? (Man/Vrouw/Anders)", name: 'gender', required: true},
-        {prompt: "Wat is uw handvoorkeur? (Links/Rechts/Beide)", name: 'handedness', required: true}
-    ],
-    data: {
-        task: 'demographics',
-        subject_id: subjectId
-    },
-    on_finish: function(data) {
-        saveDemographics({
-            subject_id: subjectId,
-            name: data.response.name,
-            student_id: data.response.student_id,
-            age: data.response.age,
-            gender: data.response.gender,
-            handedness: data.response.handedness,
-            timestamp: new Date().toISOString()
-        });
-    }
-};
+    // ADD DEMOGRAPHICS SURVEY HERE
+    const demographicsSurvey = {
+        type: jsPsychSurveyText,
+        questions: [
+            {prompt: "Wat is uw volledige naam?", name: 'name', required: true},
+            {prompt: "Wat is uw studentnummer?", name: 'student_id', required: true},
+            {prompt: "Wat is uw leeftijd?", name: 'age', required: true},
+            {prompt: "Wat is uw geslacht? (Man/Vrouw/Anders)", name: 'gender', required: true},
+            {prompt: "Wat is uw handvoorkeur? (Links/Rechts/Beide)", name: 'handedness', required: true}
+        ],
+        data: {
+            task: 'demographics',
+            subject_id: subjectId
+        },
+        on_finish: function(data) {
+            saveDemographics({
+                subject_id: subjectId,
+                name: data.response.name,
+                student_id: data.response.student_id,
+                age: data.response.age,
+                gender: data.response.gender,
+                handedness: data.response.handedness,
+                timestamp: new Date().toISOString()
+            });
+        }
+    };
 
-timeline.push(demographicsSurvey);  // Add demographics to timeline
-timeline.push(instructionsRound1);
+    timeline.push(demographicsSurvey);
+    timeline.push(instructionsRound1);
+    timeline.push(settingExplanation);  // NEW: Setting explanation slide
 
     // ===== ROUND 1: Original videos =====
     shuffledPairs.forEach((pair, index) => {
@@ -235,11 +372,28 @@ timeline.push(instructionsRound1);
                         </video>
                       </div>
                       <div id="question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+                      <!-- Help button for setting -->
+                      <button id="help-setting" style="
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        padding: 10px 20px;
+                        font-size: 14px;
+                        font-weight: bold;
+                        background-color: #28a745;
+                        color: white;
+                        border: none;
+                        border-radius: 6px;
+                        cursor: pointer;
+                        z-index: 9999;
+                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                      ">? Wat is Setting?</button>
                     </div>
                 `;
             },
             data: { task: 'round1', trial_number: trialNum, subject_id: subjectId, video_filename: pair.original_url },
             on_load: function() {
+                document.getElementById('help-setting').addEventListener('click', () => showExplanation('setting'));
                 const questions = ['setting','emotion','directness'];
                 const responses = {};
                 let qIndex = 0;
@@ -248,20 +402,20 @@ timeline.push(instructionsRound1);
                 function showQuestion() {
                     container.innerHTML = '';
                     if(questions[qIndex]==='setting'){
-                        createLikertQuestion(container, 'Beoordeel de intensiteit van de SETTING van deze video', intensityOptions, (value1)=>{
+                        createLikertQuestion(container, 'Beoordeel de intensiteit van de SETTING van deze video, negeer de gezichtsuitdrukkingen en lichaamstaal van de mensen in de video.', intensityOptions, (value1)=>{
                             responses.setting_intensiteit = value1;
-                            createLikertQuestion(container, 'Beoordeel de valentie van de SETTING van deze video', valenceOptions, (value2)=>{
+                            createLikertQuestion(container, 'Beoordeel de valentie van de SETTING van deze video, negeer de gezichtsuitdrukkingen en lichaamstaal van de mensen in de video.', valenceOptions, (value2)=>{
                                 responses.setting_valentie = value2;
                                 nextQuestion();
                             });
                         });
                     } else if(questions[qIndex]==='emotion'){
-                        createLikertQuestion(container, 'Welke emotie past het best bij deze video?', emotionsOptions, (value)=>{
+                        createLikertQuestion(container, 'Welke emotie past het best bij deze video als geheel?', emotionsOptions, (value)=>{
                             responses.emotion_choice = value;
                             nextQuestion();
                         });
                     } else if(questions[qIndex]==='directness'){
-                        createLikertQuestion(container, 'Vindt u de interactie tussen de personen meer indirect of direct?', directnessOptions, (value)=>{
+                        createLikertQuestion(container, 'Vindt u de interactie tussen de personen in de video meer indirect of direct?', directnessOptions, (value)=>{
                             responses.directness_rating = value;
                             nextQuestion();
                         });
@@ -282,6 +436,8 @@ timeline.push(instructionsRound1);
 
     // ===== ROUND 2: Annotated videos =====
     timeline.push(instructionsRound2);
+    timeline.push(personExplanation);  // NEW: Person explanation slide
+    
     shuffledPairs.forEach((pair,index)=>{
         const trialNum = index+1;
         const personTrial = {
@@ -296,15 +452,32 @@ timeline.push(instructionsRound1);
                       </video>
                     </div>
                     <div id="person-question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+                    <!-- Help button for person -->
+                    <button id="help-person" style="
+                      position: fixed;
+                      top: 20px;
+                      right: 20px;
+                      padding: 10px 20px;
+                      font-size: 14px;
+                      font-weight: bold;
+                      background-color: #28a745;
+                      color: white;
+                      border: none;
+                      border-radius: 6px;
+                      cursor: pointer;
+                      z-index: 9999;
+                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+                    ">? Wat is Persoon?</button>
                   </div>
                 `;
             },
             data: {task:'round2', trial_number:trialNum, subject_id:subjectId, video_filename: pair.annotated_url},
             on_load: function(){
+                document.getElementById('help-person').addEventListener('click', () => showExplanation('person'));
                 const container = document.getElementById('person-question-container');
-                createLikertQuestion(container, 'Beoordeel de intensiteit van de OMCIRKELDE PERSOON', intensityOptions, (value1)=>{
+                createLikertQuestion(container, 'Beoordeel de intensiteit van de OMLIJNDE PERSOON, negeer de setting', intensityOptions, (value1)=>{
                     const personIntensiteit = value1;
-                    createLikertQuestion(container, 'Beoordeel de valentie van de OMCIRKELDE PERSOON', valenceOptions, (value2)=>{
+                    createLikertQuestion(container, 'Beoordeel de valentie van de OMLIJNDE PERSOON, negeer de setting', valenceOptions, (value2)=>{
                         const personValentie = value2;
                         jsPsych.finishTrial({
                             person_intensiteit: personIntensiteit,
@@ -376,11 +549,11 @@ function saveData(jsPsych) {
     })
     .catch((err) => {
         console.error('Upload failed:', err);
-        // Fallback: download locally
         downloadData(tsvData, `subj_${subjectId}.txt`);
         alert('Upload mislukt. Data gedownload naar uw computer.');
     });
 }
+
 function saveDemographics(demographics) {
     fetch('https://annotationexperiment.netlify.app/.netlify/functions/save-demographics', {
         method: 'POST',
@@ -393,7 +566,6 @@ function saveDemographics(demographics) {
     })
     .catch(error => {
         console.error('Demographics save failed:', error);
-        // Backup: download locally if upload fails
         const demoText = `Subject ID: ${demographics.subject_id}\nName: ${demographics.name}\nStudent ID: ${demographics.student_id}\nAge: ${demographics.age}\nGender: ${demographics.gender}\nHandedness: ${demographics.handedness}\nTimestamp: ${demographics.timestamp}`;
         const blob = new Blob([demoText], {type: 'text/plain'});
         const url = URL.createObjectURL(blob);
@@ -434,10 +606,9 @@ function convertToTabDelimited(data){
                 };
             }
 
-            // Extract filename from URL and remove _Annotated if present
             if(row.video_filename){
-                const fullFilename = row.video_filename.split('/').pop(); // Get filename from URL
-                const cleanFilename = fullFilename.replace('_Annotated', ''); // Remove _Annotated
+                const fullFilename = row.video_filename.split('/').pop();
+                const cleanFilename = fullFilename.replace('_Annotated', '');
                 trials[trialNum].video_filename = cleanFilename;
             }
 
