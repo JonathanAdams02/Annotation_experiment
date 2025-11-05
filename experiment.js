@@ -1,3 +1,7 @@
+// ===== TEST MODE CONFIGURATION =====
+const TEST_MODE = 1;  // Set to 1 for test mode, 0 for production
+// ====================================
+
 // Generate random 4-digit subject ID!!!!
 const subjectId = Math.floor(1000 + Math.random() * 9000);
 
@@ -103,12 +107,12 @@ function initializeExperiment() {
             <p>De <strong>setting</strong> van een video omvat alle visuele elementen <em>behalve</em> de personen zelf. Dit zijn alle contextuele aspecten die de sfeer en omgeving bepalen.</p>
             
             <h3>Voorbeelden van setting:</h3>
-            
+            <ul>
                 <li><strong>Locatie:</strong> Een strand, kerk, ziekenhuis, kantoor</li>
                 <li><strong>Kleding:</strong> Formele pakken, zwemkleding, rouwkleding</li>
                 <li><strong>Decoratie:</strong> Ballonnen en confetti (feest), bloemen en kaarsen (herdenkingsplechtigheid)</li>
                 <li><strong>Algemene sfeer:</strong> Feestelijke verlichting vs. sobere ruimte</li>
-            
+            </ul>
             
             <p><strong>Belangrijk:</strong> Probeer bij het beoordelen van de setting de gezichtsuitdrukkingen en lichaamstaal van de mensen te negeren. Focus alleen op wat er <em>om de mensen heen</em> gebeurt.</p>
             
@@ -137,11 +141,11 @@ function initializeExperiment() {
             <p>Bij het beoordelen van een <strong>persoon</strong> focust u zich uitsluitend op de individuele emotionele uitdrukking van die persoon, los van de omgeving.</p>
             
             <h3>Voorbeelden van persoonlijke kenmerken:</h3>
-            
+            <ul>
                 <li><strong>Gezichtsuitdrukking:</strong> Glimlach, frons, tranen, blik</li>
                 <li><strong>Lichaamstaal:</strong> Houding, gebaren, spanning in het lichaam</li>
                 <li><strong>Emotionele expressie:</strong> Blijdschap, verdriet, boosheid, angst</li>
-            
+            </ul>
         
             <p><strong>Belangrijk:</strong> Negeer bij het beoordelen van de persoon volledig wat er in de achtergrond gebeurt. Een persoon kan bijvoorbeeld verdrietig kijken tijdens een feest, of blij kijken op een begrafenis. Focus alleen op de persoon zelf.</p>
             
@@ -209,11 +213,9 @@ function initializeExperiment() {
 
     // ===== Helper: Create explanation popup =====
     function showExplanation(type) {
-        // Remove existing popup if any
         const existing = document.getElementById('explanation-popup');
         if (existing) existing.remove();
         
-        // Create overlay
         const overlay = document.createElement('div');
         overlay.id = 'explanation-popup';
         overlay.style.cssText = `
@@ -229,7 +231,6 @@ function initializeExperiment() {
             z-index: 10000;
         `;
         
-        // Create popup content
         const popup = document.createElement('div');
         popup.style.cssText = `
             background-color: white;
@@ -290,7 +291,6 @@ function initializeExperiment() {
         overlay.appendChild(popup);
         document.body.appendChild(overlay);
         
-        // Close handlers
         document.getElementById('close-explanation').addEventListener('click', () => overlay.remove());
         overlay.addEventListener('click', (e) => {
             if (e.target === overlay) overlay.remove();
@@ -326,7 +326,6 @@ function initializeExperiment() {
     let timeline = [];
     timeline.push(welcome);
 
-    // ADD DEMOGRAPHICS SURVEY HERE
     const demographicsSurvey = {
         type: jsPsychSurveyText,
         questions: [
@@ -355,7 +354,7 @@ function initializeExperiment() {
 
     timeline.push(demographicsSurvey);
     timeline.push(instructionsRound1);
-    timeline.push(settingExplanation);  // NEW: Setting explanation slide
+    timeline.push(settingExplanation);
 
     // ===== ROUND 1: Original videos =====
     shuffledPairs.forEach((pair, index) => {
@@ -363,37 +362,53 @@ function initializeExperiment() {
         const round1Trial = {
             type: jsPsychHtmlButtonResponse,
             choices: [],
-            stimulus: function() {
-                return `
-                    <div style="display:flex; height:100vh; width:100vw;">
-                      <div style="flex:0 0 40%; padding:10px;">
-                        <video id="video-player" autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
-                          <source src="${pair.original_url}" type="video/mp4">
-                        </video>
-                      </div>
-                      <div id="question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
-                      <!-- Help button for setting -->
-                      <button id="help-setting" style="
-                        position: fixed;
-                        top: 20px;
-                        right: 20px;
-                        padding: 10px 20px;
-                        font-size: 14px;
-                        font-weight: bold;
-                        background-color: #28a745;
-                        color: white;
-                        border: none;
-                        border-radius: 6px;
-                        cursor: pointer;
-                        z-index: 9999;
-                        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                      ">? Wat is Setting?</button>
-                    </div>
-                `;
-            },
+           stimulus: function() {
+    const filename = pair.original_url.split('/').pop();
+    return `
+        ${TEST_MODE ? '<div style="position:fixed; top:60px; right:10px; background-color:red; color:white; padding:10px; font-weight:bold; z-index:10000; border-radius:5px;">TEST MODE</div>' : ''}
+        <div style="display:flex; height:100vh; width:100vw;">
+          <div style="flex:0 0 40%; padding:10px;">
+            ${TEST_MODE ? `<p style="font-size:14px; font-weight:bold; margin-bottom:5px; color:#333;">${filename}</p>` : ''}
+            <video id="video-player" autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
+              <source src="${pair.original_url}" type="video/mp4">
+            </video>
+          </div>
+          <div id="question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+          <button id="help-setting" style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          ">? Wat is Setting?</button>
+          ${TEST_MODE ? `<button id="skip-button" style="position:fixed; bottom:20px; right:20px; padding:15px 30px; font-size:18px; font-weight:bold; background-color:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer; z-index:9999; box-shadow:0 4px 6px rgba(0,0,0,0.2);">SKIP →</button>` : ''}
+        </div>
+    `;
+},
             data: { task: 'round1', trial_number: trialNum, subject_id: subjectId, video_filename: pair.original_url },
             on_load: function() {
                 document.getElementById('help-setting').addEventListener('click', () => showExplanation('setting'));
+                
+                if (TEST_MODE) {
+                    document.getElementById('skip-button').addEventListener('click', () => {
+                        jsPsych.finishTrial({
+                            setting_intensiteit: 0,
+                            setting_valentie: 0,
+                            emotion_choice: 0,
+                            directness_rating: 0,
+                            skipped: true
+                        });
+                    });
+                }
+                
                 const questions = ['setting','emotion','directness'];
                 const responses = {};
                 let qIndex = 0;
@@ -436,7 +451,7 @@ function initializeExperiment() {
 
     // ===== ROUND 2: Annotated videos =====
     timeline.push(instructionsRound2);
-    timeline.push(personExplanation);  // NEW: Person explanation slide
+    timeline.push(personExplanation);
     
     shuffledPairs.forEach((pair,index)=>{
         const trialNum = index+1;
@@ -444,36 +459,50 @@ function initializeExperiment() {
             type: jsPsychHtmlButtonResponse,
             choices: [],
             stimulus: function(){
-                return `
-                  <div style="display:flex; height:100vh; width:100vw;">
-                    <div style="flex:0 0 40%; padding:10px;">
-                      <video autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
-                        <source src="${pair.annotated_url}" type="video/mp4">
-                      </video>
-                    </div>
-                    <div id="person-question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
-                    <!-- Help button for person -->
-                    <button id="help-person" style="
-                      position: fixed;
-                      top: 20px;
-                      right: 20px;
-                      padding: 10px 20px;
-                      font-size: 14px;
-                      font-weight: bold;
-                      background-color: #28a745;
-                      color: white;
-                      border: none;
-                      border-radius: 6px;
-                      cursor: pointer;
-                      z-index: 9999;
-                      box-shadow: 0 2px 4px rgba(0,0,0,0.2);
-                    ">? Wat is Persoon?</button>
-                  </div>
-                `;
-            },
+    const filename = pair.annotated_url.split('/').pop();
+    return `
+        ${TEST_MODE ? '<div style="position:fixed; top:60px; right:10px; background-color:red; color:white; padding:10px; font-weight:bold; z-index:10000; border-radius:5px;">TEST MODE</div>' : ''}
+        <div style="display:flex; height:100vh; width:100vw;">
+          <div style="flex:0 0 40%; padding:10px;">
+            ${TEST_MODE ? `<p style="font-size:14px; font-weight:bold; margin-bottom:5px; color:#333;">${filename}</p>` : ''}
+            <video autoplay loop muted style="width:100%; height:100%; object-fit:contain;">
+              <source src="${pair.annotated_url}" type="video/mp4">
+            </video>
+          </div>
+          <div id="person-question-container" style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;"></div>
+          <button id="help-person" style="
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            padding: 10px 20px;
+            font-size: 14px;
+            font-weight: bold;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            z-index: 9999;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+          ">? Wat is Persoon?</button>
+          ${TEST_MODE ? `<button id="skip-button-person" style="position:fixed; bottom:20px; right:20px; padding:15px 30px; font-size:18px; font-weight:bold; background-color:#ff9800; color:white; border:none; border-radius:8px; cursor:pointer; z-index:9999; box-shadow:0 4px 6px rgba(0,0,0,0.2);">SKIP →</button>` : ''}
+        </div>
+    `;
+},
             data: {task:'round2', trial_number:trialNum, subject_id:subjectId, video_filename: pair.annotated_url},
             on_load: function(){
                 document.getElementById('help-person').addEventListener('click', () => showExplanation('person'));
+                
+                if (TEST_MODE) {
+                    document.getElementById('skip-button-person').addEventListener('click', () => {
+                        jsPsych.finishTrial({
+                            person_intensiteit: 0,
+                            person_valentie: 0,
+                            skipped: true
+                        });
+                    });
+                }
+                
                 const container = document.getElementById('person-question-container');
                 createLikertQuestion(container, 'Beoordeel de intensiteit van de OMLIJNDE PERSOON, negeer de setting', intensityOptions, (value1)=>{
                     const personIntensiteit = value1;
@@ -524,7 +553,6 @@ function initializeExperiment() {
     };
     timeline.push(finalScreen);
 
-    // ===== Run jsPsych timeline =====
     jsPsych.run(timeline);
 }
 
