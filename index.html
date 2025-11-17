@@ -17,14 +17,17 @@
     <!-- jsPsych CSS -->
     <link href="https://unpkg.com/jspsych@7.3.4/css/jspsych.css" rel="stylesheet" type="text/css" />
     
+    <!-- Plutchik CSS - FIXED SPELLING -->
+    <link rel="stylesheet" href="Plutchik/plutchik.css">
+    
     <!-- Custom CSS -->
     <link href="styles.css" rel="stylesheet" type="text/css" />
 </head>
 <body>
     <div id="jspsych-target"></div>
     
-    <!-- Load video list -->
-    <script src="video-list.json"></script>
+    <!-- Load Plutchik JS BEFORE experiment.js -->
+    <script src="Plutchik/plutchik.js"></script>
     
     <!-- Load experiment -->
     <script src="experiment.js"></script>

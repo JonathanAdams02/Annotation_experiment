@@ -1,0 +1,45 @@
+/* Styles for clicked state - works inside inline SVG */
+path.clicked {
+    fill: #AAAAAA !important;
+}
+
+/* Hover effect for paths with IDs */
+path[id]:hover {
+    fill: #DDDDDD;
+    cursor: pointer;
+}
+
+/* Container for the SVG */
+#div_svg {
+    border: 1px black solid;
+    width: 100%;
+    max-width: 550px;
+    position: relative;
+}
+
+/* Description box - FOLLOWS CURSOR */
+#div_svg_lt_box {
+    display: none;
+    position: fixed; /* Changed to fixed so it follows cursor */
+    width: 300px;
+    background: rgba(250, 235, 215, 0.98);
+    border: 2px solid #3498DB;
+    border-radius: 8px;
+    z-index: 99999; /* Very high z-index to be on top of everything */
+    font-size: 11px;
+    padding: 8px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 6px rgba(0,0,0,0.3);
+    pointer-events: none; /* Allow clicking through it */
+}
+
+#div_svg_lt_box p {
+    margin: 3px 5px;
+}
+
+/* Make sure the object element takes full width */
+#svg_emo_wheel {
+    width: 100%;
+    height: auto;
+    display: block;
+}
