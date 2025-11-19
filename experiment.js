@@ -1,4 +1,4 @@
-// ===== TEST MODE CONFIGURATION =====
+// ===== TEST MODE CONFIGURATION 
 const TEST_MODE = 1;  // Set to 1 for test mode, 0 for production
 // ====================================
 
