@@ -156,7 +156,7 @@ function initializeExperiment() {
     const welcome = {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
-            <h1>Welcome to the Video Study</h1>
+            <h1>Welcome to the Video Annoation Study</h1>
             <p>Thank you for participating in this study.</p>
             <p>You will watch a series of short videos and answer questions about them.</p>
             <p>Your participant ID is: <strong>${subjectId}</strong></p>
