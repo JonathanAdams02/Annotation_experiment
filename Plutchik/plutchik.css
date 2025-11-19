@@ -11,7 +11,7 @@ path[id]:hover {
 
 /* Container for the SVG */
 #div_svg {
-    border: 1px black solid;
+    border: noneS;
     width: 100%;
     max-width: 550px;
     position: relative;
