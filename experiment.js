@@ -112,7 +112,7 @@ function initializeExperiment() {
                 <p><strong>Location:</strong> A beach, church, hospital, office</p>
                 <p><strong>Clothing:</strong> Formal suits, swimwear, mourning clothes</p>
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
-                <p><strong>Items in the room:</strong> Furniture, objects, equipment</p>
+                <p><strong>Items in the room:</strong> Furniture, objects, equipment, guns</p>
                 
                 <p><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
             `;
@@ -220,7 +220,7 @@ function initializeExperiment() {
                 <p><strong>Location:</strong> A beach, church, hospital, office</p>
                 <p><strong>Clothing:</strong> Formal suits, swimwear, mourning clothes</p>
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
-                <p><strong>Items in the room:</strong> Furniture, objects, equipment</p>
+                <p><strong>Items in the room:</strong> Furniture, objects, equipment, guns</p>
                 
                 <p><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
                 
@@ -251,7 +251,7 @@ function initializeExperiment() {
                 <div style="margin-bottom: 25px;">
                     <h3>3. Directness (Social Interaction)</h3>
                     <p>Please rate the directness of the social interaction displayed in the video on a scale from 1 (very indirect) to 6 (very direct).</p>
-                    <p><strong>Direct interactions</strong> involve people actively communicating or engaging with each other.</p>
+                    <p><strong>Direct interactions</strong> involve people actively communicating or engaging with each other. (e.g. fighting, hugging) </p>
                     <p><strong>Indirect interactions</strong> involve people who are in the same setting or context but are not directly engaging with each other. They may be aware of each other's presence but are not actively communicating or interacting.</p>
                     <p>Consider the primary focus of the video when making your rating. If the video shows multiple types of interactions, rate based on the most prominent or salient interaction shown.</p>
                 </div>
@@ -570,7 +570,7 @@ function initializeExperiment() {
                 const infoContent = {
                     valence: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation. So a black lives matter protest is typically negative (= the participants are not happy) independent of whether you support BLM.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the setting on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
                     intensity: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>intensity</strong> of the setting, ranging from not intense at all (0) to very intense (6).",
-                    directness: "Please rate the directness of the social interaction displayed in the video on a scale from 1 (very indirect) to 6 (very direct).<br><br><strong>Direct interactions</strong> involve people actively communicating or engaging with each other through conversation, eye contact, physical contact, or coordinated activities (e.g., dancing together, playing a game, having a discussion).<br><br><strong>Indirect interactions</strong> involve people who are in the same setting or context but are not directly engaging with each other. They may be aware of each other's presence but are not actively communicating or interacting (e.g., people sitting separately in a waiting room, individuals in a crowd watching an event, people walking past each other).<br><br>Consider the primary focus of the video when making your rating. If the video shows multiple types of interactions, rate based on the most prominent or salient interaction shown.",
+                    directness: "Please rate the directness of the social interaction displayed in the video on a scale from 1 (very indirect) to 6 (very direct).<br><br><strong>Direct interactions</strong> involve people actively communicating or engaging with each other.( e.g. fighting, hugging)<br><br><strong>Indirect interactions</strong> involve people who are in the same setting or context but are not directly engaging with each other. They may be aware of each other's presence but are not actively communicating or interacting (e.g., people sitting separately in a waiting room, individuals in a crowd watching an event, people walking past each other).<br><br>Consider the primary focus of the video when making your rating. If the video shows multiple types of interactions, rate based on the most prominent or salient interaction shown.",
                     emotion: "We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel called \"Plutchik's Wheel of Emotions\". If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.<br><br>For a more detailed description of each emotion depicted in this wheel, hover over each emotion segment.",
                     ambiguity: "Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>\"Ambiguity\"</strong>.<br><br>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).",
                     person_valence: "We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the person on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
