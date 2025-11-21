@@ -1,5 +1,5 @@
 // ===== TEST MODE CONFIGURATION 
-const TEST_MODE = 1;  // Set to 1 for test mode, 0 for production
+const TEST_MODE = 0;  // Set to 1 for test mode, 0 for production
 // ====================================
 
 // Generate random 4-digit subject ID
@@ -519,7 +519,7 @@ function initializeExperiment() {
                       <button id="help-setting" style="
                         position: fixed;
                         top: 20px;
-                        right: 20px;
+                        left: 20px;
                         padding: 10px 20px;
                         font-size: 14px;
                         font-weight: bold;
@@ -826,7 +826,7 @@ function initializeExperiment() {
                       <button id="help-person" style="
                         position: fixed;
                         top: 20px;
-                        right: 20px;
+                        left: 20px;
                         padding: 10px 20px;
                         font-size: 14px;
                         font-weight: bold;
