@@ -382,9 +382,9 @@ function initializeExperiment() {
                               <label style="font-weight:bold; font-size:12px;">Directness (social interaction):</label>
                               <span class="info-icon" data-info="directness" style="cursor:help; font-size:12px; color:#007bff;">ⓘ</span>
                             </div>
-                            <input type="range" min="1" max="6" value="1" step="1" id="slider-directness" style="width:100%; height:10px;">
+                            <input type="range" min="0" max="6" value="0" step="1" id="slider-directness" style="width:100%; height:10px;">
                             <div style="display:flex; justify-content:space-between; font-size:8px; color:#666; margin-top:0px;">
-                              <span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
+                              <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
                             </div>
                           </div>
                         </div>
