@@ -1,5 +1,5 @@
 // ===== TEST MODE CONFIGURATION 
-const TEST_MODE = 0;  // Set to 1 for test mode, 0 for production
+const TEST_MODE = 1;  // Set to 1 for test mode, 0 for production
 // ====================================
 
 // Generate random 4-digit subject ID
@@ -64,6 +64,8 @@ function initializeExperiment() {
     }
 
     const videoPairs = createTrialPairs(videoListData);
+     console.log('Created pairs:', videoPairs.length);  // ← ADD HERE
+    console.log('First pair:', videoPairs[0]);          // ← ADD HERE
     const shuffledPairs = jsPsych.randomization.shuffle(videoPairs);
 
     // Store responses for navigation
@@ -201,7 +203,7 @@ function initializeExperiment() {
             <p><strong>Intensity:</strong> How intense the setting is (0 to 6)</p>
             <p><strong>Directness:</strong> How direct the social interaction is (1 to 6)</p>
             <p><strong>Emotion:</strong> Select the main emotion from the emotion wheel</p>
-            <p><strong>Ambiguity:</strong> How clear vs ambiguous the emotional content is (0 to 6)</p>
+            <p><strong>Ambivalence:</strong> How clear vs ambiguous the emotional content is (0 to 6)</p>
             <p>All questions appear on a single screen. The video will loop continuously.</p>
             <p>Click "Continue" for detailed explanations of each rating.</p>
         `,
@@ -263,8 +265,8 @@ function initializeExperiment() {
                 </div>
                 
                 <div style="margin-bottom: 25px;">
-                    <h3>5. Ambiguity</h3>
-                    <p>Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>"Ambiguity"</strong>.</p>
+                    <h3>5. Ambivalence</h3>
+                    <p>Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>"Ambivalence"</strong>.</p>
                     <p>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).</p>
                 </div>
                 
@@ -278,7 +280,7 @@ function initializeExperiment() {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
             <h2>Instructions – Round Two</h2>
-            <p>In this part you will see the same videos again, but now one person is outlined.</p>
+            <p>In this part you will see the same videos again, but now one person is highlighted with an arrow.</p>
             <p>Rate the <strong>intensity</strong> and <strong>valence</strong> of the outlined person only.</p>
             <p>Click "Continue" to learn more about rating a person.</p>
         `,
@@ -291,7 +293,8 @@ function initializeExperiment() {
             <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
                 <h2>What are the characteristics of a PERSON?</h2>
                 <p>When evaluating a <strong>person</strong>, you focus exclusively on that individual's emotional expression, independent of the environment.</p>
-                
+                <p>Please focus on the person indicated by the arrow in the video.</p>
+
                 <h3>Examples of personal characteristics:</h3>
                 <p><strong>Facial expression:</strong> Smile, frown, tears, gaze</p>
                 <p><strong>Body language:</strong> Posture, gestures, body tension</p>
@@ -303,12 +306,14 @@ function initializeExperiment() {
                 <div style="margin-bottom: 20px;">
                     <h4>Valence (Person)</h4>
                     <p>We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.</p>
+                    <p>Please focus on the person indicated by the arrow.</p>
                     <p>Specifically, we ask you to rate the <strong>valence</strong> ("Negative/Positive") of the overall emotional gist of the person on a 7-point scale from negative (-3) over neutral (0) to positive (+3).</p>
                 </div>
                 
                 <div style="margin-bottom: 20px;">
                     <h4>Intensity (Person)</h4>
                     <p>We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.</p>
+                    <p>Please focus on the person indicated by the arrow.</p>
                     <p>Specifically, we ask you to rate the <strong>intensity</strong> of the person, ranging from not intense at all (0) to very intense (6).</p>
                 </div>
                 
@@ -501,13 +506,13 @@ function initializeExperiment() {
                           </p>
                         </div>
 
-                        <!-- Bottom: Ambiguity Slider -->
+                        <!-- Bottom: Ambivalence Slider -->
                         <div style="flex:0 0 auto; margin-top:0px;">
                           <div style="display:flex; align-items:center; gap:5px; margin-bottom:0px;">
-                            <label style="font-weight:bold; font-size:12px;">Ambiguity:</label>
-                            <span class="info-icon" data-info="ambiguity" style="cursor:help; font-size:12px; color:#007bff;">ⓘ</span>
+                            <label style="font-weight:bold; font-size:12px;">Ambivalence:</label>
+                            <span class="info-icon" data-info="ambivalence" style="cursor:help; font-size:12px; color:#007bff;">ⓘ</span>
                           </div>
-                          <input type="range" min="0" max="6" value="0" step="1" id="slider-ambiguity" style="width:100%; height:10px;">
+                          <input type="range" min="0" max="6" value="0" step="1" id="slider-ambivalence" style="width:100%; height:10px;">
                           <div style="display:flex; justify-content:space-between; font-size:8px; color:#666; margin-top:0px;">
                             <span>0</span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span><span>6</span>
                           </div>
@@ -541,7 +546,7 @@ function initializeExperiment() {
             },
             button_html: `
                 <div style="position:fixed; bottom:60px; left:27.5%; transform:translateX(-50%);">
-                    <button id="next-btn" class="jspsych-btn" disabled style="padding:15px 30px; font-size:16px; background:#ccc; color:#666; border:none; border-radius:6px; cursor:not-allowed;">Next →</button>
+                    <button id="next-btn" class="jspsych-btn" style="padding:15px 30px; font-size:16px; background:#ccc; color:#666; border:none; border-radius:6px; cursor:not-allowed;">Next →</button>
                 </div>
             `,
             
@@ -558,7 +563,7 @@ function initializeExperiment() {
                         intensity: null,
                         directness: null,
                         emotion: null,
-                        ambiguity: null
+                        ambivalence: null
                     };
                 }
                 const responses = round1Responses[trialNum];
@@ -572,7 +577,7 @@ function initializeExperiment() {
                     intensity: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>intensity</strong> of the setting, ranging from not intense at all (0) to very intense (6).",
                     directness: "Please rate the directness of the social interaction displayed in the video on a scale from 1 (very indirect) to 6 (very direct).<br><br><strong>Direct interactions</strong> involve people actively communicating or engaging with each other.( e.g. fighting, hugging)<br><br><strong>Indirect interactions</strong> involve people who are in the same setting or context but are not directly engaging with each other. They may be aware of each other's presence but are not actively communicating or interacting (e.g., people sitting separately in a waiting room, individuals in a crowd watching an event, people walking past each other).<br><br>Consider the primary focus of the video when making your rating. If the video shows multiple types of interactions, rate based on the most prominent or salient interaction shown.",
                     emotion: "We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel called \"Plutchik's Wheel of Emotions\". If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.<br><br>For a more detailed description of each emotion depicted in this wheel, hover over each emotion segment.",
-                    ambiguity: "Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>\"Ambiguity\"</strong>.<br><br>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).",
+                    ambivalence: "Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>\"ambivalence\"</strong>.<br><br>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).",
                     person_valence: "We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the person on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
                     person_intensity: "We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>intensity</strong> of the person, ranging from not intense at all (0) to very intense (6)."
                 };
@@ -594,7 +599,7 @@ function initializeExperiment() {
                             const tooltip = document.getElementById('info-tooltip');
                             const infoType = this.dataset.info;
                             
-                            if (infoType === 'ambiguity') {
+                            if (infoType === 'ambivalence') {
                                 tooltip.style.left = (e.clientX - 360) + 'px';
                                 tooltip.style.top = (e.clientY - 160) + 'px';
                             } else {
@@ -614,13 +619,13 @@ function initializeExperiment() {
                 const valenceSlider = document.getElementById('slider-valence');
                 const intensitySlider = document.getElementById('slider-intensity');
                 const directnessSlider = document.getElementById('slider-directness');
-                const ambiguitySlider = document.getElementById('slider-ambiguity');
+                const ambivalenceSlider = document.getElementById('slider-ambivalence');
                 
                 let slidersTouched = {
                     valence: false,
                     intensity: false,
                     directness: false,
-                    ambiguity: false
+                    ambivalence: false
                 };
                 
                 valenceSlider.addEventListener('input', function() {
@@ -641,9 +646,9 @@ function initializeExperiment() {
                     checkAllAnswered();
                 });
                 
-                ambiguitySlider.addEventListener('input', function() {
-                    responses.ambiguity = parseInt(this.value);
-                    slidersTouched.ambiguity = true;
+                ambivalenceSlider.addEventListener('input', function() {
+                    responses.ambivalence = parseInt(this.value);
+                    slidersTouched.ambivalence = true;
                     checkAllAnswered();
                 });
                 
@@ -696,19 +701,19 @@ function initializeExperiment() {
                 
                 // Check if all answered
                 function checkAllAnswered() {
-                    const allAnswered = 
-                        slidersTouched.valence &&
-                        slidersTouched.intensity &&
-                        slidersTouched.directness &&
-                        responses.emotion !== null &&
-                        slidersTouched.ambiguity;
+                    const allAnswered = responses.emotion !== null;
                     
                     const nextBtn = document.getElementById('next-btn');
                     if (allAnswered) {
-                        nextBtn.disabled = false;
+                        nextBtn.dataset.complete = 'true';
                         nextBtn.style.background = '#007bff';
                         nextBtn.style.color = 'white';
                         nextBtn.style.cursor = 'pointer';
+                    } else {
+                        nextBtn.dataset.complete = 'false';
+                        nextBtn.style.background = '#ccc';
+                        nextBtn.style.color = '#666';
+                        nextBtn.style.cursor = 'not-allowed';
                     }
                 }
                 
@@ -725,9 +730,9 @@ function initializeExperiment() {
                     directnessSlider.value = responses.directness;
                     slidersTouched.directness = true;
                 }
-                if (responses.ambiguity !== null) {
-                    ambiguitySlider.value = responses.ambiguity;
-                    slidersTouched.ambiguity = true;
+                if (responses.ambivalence !== null) {
+                    ambivalenceSlider.value = responses.ambivalence;
+                    slidersTouched.ambivalence = true;
                 }
                 if (responses.emotion) {
                     const selected = svgElement.querySelector('#' + responses.emotion);
@@ -738,6 +743,9 @@ function initializeExperiment() {
                     document.getElementById('emotion-selected').style.color = '#28a745';
                 }
                 
+                // Initialize button state
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.dataset.complete = 'false';
                 checkAllAnswered();
                 
                 // Test mode skip button
@@ -747,17 +755,24 @@ function initializeExperiment() {
                         responses.intensity = 3;
                         responses.directness = 3;
                         responses.emotion = 'joy';
-                        responses.ambiguity = 3;
+                        responses.ambivalence = 3;
                         jsPsych.finishTrial({skipped: true});
                     });
                 }
                 
-                // Manual click handler for custom positioned button
-                document.getElementById('next-btn').addEventListener('click', function() {
-                    if (!this.disabled) {
-                        jsPsych.finishTrial();
-                    }
-                });
+                // Manual click handler for custom positioned button - WITH VALIDATION ALERT
+document.getElementById('next-btn').addEventListener('click', function(e) {
+    e.preventDefault(); // Prevent any default behavior
+    e.stopPropagation(); // Stop event from bubbling up
+    
+    if (this.dataset.complete === 'false' || !this.dataset.complete) {
+        // Show alert if emotion not selected
+        alert('Please respond to all items before continuing.');
+        return; // Stop here, don't proceed to next trial
+    }
+    // Only proceed if validation passed
+    jsPsych.finishTrial();
+});
             },
             on_finish: function(data) {
                 const responses = round1Responses[trialNum];
@@ -765,7 +780,7 @@ function initializeExperiment() {
                 data.intensity = responses.intensity;
                 data.directness = responses.directness;
                 data.emotion = responses.emotion;
-                data.ambiguity = responses.ambiguity;
+                data.ambivalence = responses.ambivalence;
             }
         };
         
@@ -848,7 +863,7 @@ function initializeExperiment() {
             },
             button_html: `
                 <div style="position:fixed; bottom:60px; left:27.5%; transform:translateX(-50%);">
-                    <button id="next-btn" class="jspsych-btn" disabled style="padding:15px 30px; font-size:16px; background:#ccc; color:#666; border:none; border-radius:6px; cursor:not-allowed;">Next →</button>
+                    <button id="next-btn" class="jspsych-btn" style="padding:15px 30px; font-size:16px; background:#ccc; color:#666; border:none; border-radius:6px; cursor:not-allowed;">Next →</button>
                 </div>
             `,
             data: {
@@ -922,13 +937,12 @@ function initializeExperiment() {
                 });
                 
                 function checkAnswered() {
+                    // Always enable the button in Round 2
                     const nextBtn = document.getElementById('next-btn');
-                    if (slidersTouched.valence && slidersTouched.intensity) {
-                        nextBtn.disabled = false;
-                        nextBtn.style.background = '#007bff';
-                        nextBtn.style.color = 'white';
-                        nextBtn.style.cursor = 'pointer';
-                    }
+                    nextBtn.dataset.complete = 'true';
+                    nextBtn.style.background = '#007bff';
+                    nextBtn.style.color = 'white';
+                    nextBtn.style.cursor = 'pointer';
                 }
                 
                 // Restore responses
@@ -941,7 +955,12 @@ function initializeExperiment() {
                     slidersTouched.intensity = true;
                 }
                 
-                checkAnswered();
+                // Initialize button to enabled state for Round 2
+                const nextBtn = document.getElementById('next-btn');
+                nextBtn.dataset.complete = 'true';
+                nextBtn.style.background = '#007bff';
+                nextBtn.style.color = 'white';
+                nextBtn.style.cursor = 'pointer';
                 
                 if (TEST_MODE && document.getElementById('skip-button-person')) {
                     document.getElementById('skip-button-person').addEventListener('click', () => {
@@ -953,9 +972,7 @@ function initializeExperiment() {
                 
                 // Manual click handler for custom positioned button
                 document.getElementById('next-btn').addEventListener('click', function() {
-                    if (!this.disabled) {
-                        jsPsych.finishTrial();
-                    }
+                    jsPsych.finishTrial();
                 });
             },
             on_finish: function(data) {
@@ -1064,7 +1081,7 @@ function convertToTabDelimited(data){
         'intensity',
         'directness',
         'emotion',
-        'ambiguity',
+        'ambivalence',
         'person_valence',
         'person_intensity'
     ];
@@ -1094,7 +1111,7 @@ function convertToTabDelimited(data){
                 if(row.intensity !== undefined) trials[trialNum].intensity = row.intensity;
                 if(row.directness !== undefined) trials[trialNum].directness = row.directness;
                 if(row.emotion !== undefined) trials[trialNum].emotion = row.emotion;
-                if(row.ambiguity !== undefined) trials[trialNum].ambiguity = row.ambiguity;
+                if(row.ambivalence !== undefined) trials[trialNum].ambivalence = row.ambivalence;
             } else if(row.task === 'round2'){
                 trials[trialNum].person_valence = row.person_valence;
                 trials[trialNum].person_intensity = row.person_intensity;

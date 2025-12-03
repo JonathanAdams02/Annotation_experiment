@@ -151,6 +151,11 @@
   },
   {
     "folder": "Ambiguous_Person_Negative_Scene_Annotation",
+    "filename": "Ambiguous_Person_Negative_Scene_Indirect_1_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Negative_Scene_Annotation/Ambiguous_Person_Negative_Scene_Indirect_1_Annotated.mp4"
+  },
+  {
+    "folder": "Ambiguous_Person_Negative_Scene_Annotation",
     "filename": "Ambiguous_Person_Negative_Scene_Indirect_10_Annotated.mp4",
     "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Negative_Scene_Annotation/Ambiguous_Person_Negative_Scene_Indirect_10_Annotated.mp4"
   },
@@ -163,11 +168,6 @@
     "folder": "Ambiguous_Person_Negative_Scene_Annotation",
     "filename": "Ambiguous_Person_Negative_Scene_Indirect_12_Annotated.mp4",
     "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Negative_Scene_Annotation/Ambiguous_Person_Negative_Scene_Indirect_12_Annotated.mp4"
-  },
-  {
-    "folder": "Ambiguous_Person_Negative_Scene_Annotation",
-    "filename": "Ambiguous_Person_Negative_Scene_Indirect_1_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Negative_Scene_Annotation/Ambiguous_Person_Negative_Scene_Indirect_1_Annotated.mp4"
   },
   {
     "folder": "Ambiguous_Person_Negative_Scene_Annotation",
@@ -341,13 +341,13 @@
   },
   {
     "folder": "Ambiguous_Person_Positive_Scene_Annotation",
-    "filename": "Ambiguous_Person_Positive_Scene_Indirect_10_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Positive_Scene_Annotation/Ambiguous_Person_Positive_Scene_Indirect_10_Annotated.mp4"
+    "filename": "Ambiguous_Person_Positive_Scene_Indirect_1_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Positive_Scene_Annotation/Ambiguous_Person_Positive_Scene_Indirect_1_Annotated.mp4"
   },
   {
     "folder": "Ambiguous_Person_Positive_Scene_Annotation",
-    "filename": "Ambiguous_Person_Positive_Scene_Indirect_1_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Positive_Scene_Annotation/Ambiguous_Person_Positive_Scene_Indirect_1_Annotated.mp4"
+    "filename": "Ambiguous_Person_Positive_Scene_Indirect_10_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Ambiguous_Person_Positive_Scene_Annotation/Ambiguous_Person_Positive_Scene_Indirect_10_Annotated.mp4"
   },
   {
     "folder": "Ambiguous_Person_Positive_Scene_Annotation",
@@ -491,6 +491,11 @@
   },
   {
     "folder": "Congruent_Negative_Annotation",
+    "filename": "Congruent_Neg_Direct_1_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Congruent_Negative_Annotation/Congruent_Neg_Direct_1_Annotated.mp4"
+  },
+  {
+    "folder": "Congruent_Negative_Annotation",
     "filename": "Congruent_Neg_Direct_10_Annotated.mp4",
     "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Congruent_Negative_Annotation/Congruent_Neg_Direct_10_Annotated.mp4"
   },
@@ -503,11 +508,6 @@
     "folder": "Congruent_Negative_Annotation",
     "filename": "Congruent_Neg_Direct_12_Annotated.mp4",
     "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Congruent_Negative_Annotation/Congruent_Neg_Direct_12_Annotated.mp4"
-  },
-  {
-    "folder": "Congruent_Negative_Annotation",
-    "filename": "Congruent_Neg_Direct_1_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Congruent_Negative_Annotation/Congruent_Neg_Direct_1_Annotated.mp4"
   },
   {
     "folder": "Congruent_Negative_Annotation",
@@ -851,13 +851,13 @@
   },
   {
     "folder": "Incongruent_Neg_Scene_Pos_Person_Annotation",
-    "filename": "Incongruent_Neg_Scene_Pos_Person_Direct_10_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Incongruent_Neg_Scene_Pos_Person_Annotation/Incongruent_Neg_Scene_Pos_Person_Direct_10_Annotated.mp4"
+    "filename": "Incongruent_Neg_Scene_Pos_Person_Direct_1_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Incongruent_Neg_Scene_Pos_Person_Annotation/Incongruent_Neg_Scene_Pos_Person_Direct_1_Annotated.mp4"
   },
   {
     "folder": "Incongruent_Neg_Scene_Pos_Person_Annotation",
-    "filename": "Incongruent_Neg_Scene_Pos_Person_Direct_1_Annotated.mp4",
-    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Incongruent_Neg_Scene_Pos_Person_Annotation/Incongruent_Neg_Scene_Pos_Person_Direct_1_Annotated.mp4"
+    "filename": "Incongruent_Neg_Scene_Pos_Person_Direct_10_Annotated.mp4",
+    "url": "https://lingering-cloud-f458.jonathanadams02.workers.dev/Incongruent_Neg_Scene_Pos_Person_Annotation/Incongruent_Neg_Scene_Pos_Person_Direct_10_Annotated.mp4"
   },
   {
     "folder": "Incongruent_Neg_Scene_Pos_Person_Annotation",
