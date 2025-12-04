@@ -110,7 +110,7 @@ function initializeExperiment() {
                 <p>In round one you will be asked to answer questions about the <strong>setting</strong> of a video.</p>
                 <p>The <strong>setting</strong> includes all visual elements <em>except</em> the people themselves. These are all contextual aspects that determine the atmosphere and environment.</p>
                 
-                <h4>Examples of setting:</h4>
+                <h4>The setting can consist of e.g.:</h4>
                 <p><strong>Location:</strong> A beach, church, hospital, office</p>
                 <p><strong>Clothing:</strong> Formal suits, swimwear, mourning clothes</p>
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
@@ -121,13 +121,13 @@ function initializeExperiment() {
         } else if (type === 'person') {
             content = `
                 <h3 style="margin-top:0;">What are the characteristics of a PERSON?</h3>
-                <p>When evaluating a <strong>person</strong>, you focus exclusively on that individual's emotional expression, independent of the environment.</p>
+                <p>When evaluating a <strong>person</strong>, you focus exclusively on that individual's facial expression and body language, independent of the environment.</p>
                 
                 <h4>Examples of personal characteristics:</h4>
                 <p><strong>Facial expression:</strong> Smile, frown, tears, gaze</p>
                 <p><strong>Body language:</strong> Posture, gestures, body tension</p>
                 
-                <p><strong>Important:</strong> When evaluating the person, completely ignore what is happening in the background. A person can look sad at a party, or happy at a funeral. Focus only on the person themselves.</p>
+                <p><strong>Important:</strong> When evaluating the person, completely ignore what is happening in the setting. A person can look sad at a party, or happy at a funeral. Focus only on the person themselves.</p>
             `;
         }
         
@@ -203,7 +203,7 @@ function initializeExperiment() {
             <p><strong>Intensity:</strong> How intense the setting is (0 to 6)</p>
             <p><strong>Directness:</strong> How direct the social interaction is (1 to 6)</p>
             <p><strong>Emotion:</strong> Select the main emotion from the emotion wheel</p>
-            <p><strong>Ambivalence:</strong> How clear vs ambiguous the emotional content is (0 to 6)</p>
+            <p><strong>Ambivalence:</strong> How clear vs ambivalent the emotional content of the video is (0 to 6)</p>
             <p>All questions appear on a single screen. The video will loop continuously.</p>
             <p>Click "Continue" for detailed explanations of each rating.</p>
         `,
@@ -218,7 +218,7 @@ function initializeExperiment() {
                  <p>In round one you will be asked to answer questions about the <strong>setting</strong> of a video.</p>
                 <p>The <strong>setting</strong> includes all visual elements <em>except</em> the people themselves. These are all contextual aspects that determine the atmosphere and environment.</p>
                 
-                <h3>Examples of setting:</h3>
+                <h3>The setting can consist of e.g.:</h3>
                 <p><strong>Location:</strong> A beach, church, hospital, office</p>
                 <p><strong>Clothing:</strong> Formal suits, swimwear, mourning clothes</p>
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
@@ -265,7 +265,7 @@ function initializeExperiment() {
                 </div>
                 
                 <div style="margin-bottom: 25px;">
-                    <h3>5. Ambivalence</h3>
+                    <h3>5. Ambivalence (Whole video)</h3>
                     <p>Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>"Ambivalence"</strong>.</p>
                     <p>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).</p>
                 </div>
@@ -292,14 +292,14 @@ function initializeExperiment() {
         stimulus: `
             <div style="max-width: 800px; margin: 0 auto; padding: 20px;">
                 <h2>What are the characteristics of a PERSON?</h2>
-                <p>When evaluating a <strong>person</strong>, you focus exclusively on that individual's emotional expression, independent of the environment.</p>
+                <p>When evaluating a <strong>person</strong>, you focus exclusively on that individual's facial expression and body language, independent of the environment.</p>
                 <p>Please focus on the person indicated by the arrow in the video.</p>
 
                 <h3>Examples of personal characteristics:</h3>
                 <p><strong>Facial expression:</strong> Smile, frown, tears, gaze</p>
                 <p><strong>Body language:</strong> Posture, gestures, body tension</p>
                 
-                <p><strong>Important:</strong> When evaluating the person, completely ignore what is happening in the background. A person can look sad at a party, or happy at a funeral. Focus only on the person themselves.</p>
+                <p><strong>Important:</strong> When evaluating the person, completely ignore what is happening in the setting. A person can look sad at a party, or happy at a funeral. Focus only on the person themselves.</p>
                 
                 <h3 style="margin-top: 30px;">Rating Scales for Round Two</h3>
                 
@@ -397,7 +397,7 @@ function initializeExperiment() {
                         <!-- Middle: Emotion Wheel (DYNAMIC) -->
                         <div style="flex:1 1 auto; display:flex; flex-direction:column; min-height:0; margin:1px 0; overflow:hidden;">
                           <div style="display:flex; align-items:center; gap:5px; margin-bottom:0px;">
-                            <h3 style="margin:0; font-size:12px; font-weight:bold;">Emotion (whole video):</h3>
+                            <h3 style="margin:0; font-size:12px; font-weight:bold;">Emotion (Whole video):</h3>
                             <span class="info-icon" data-info="emotion" style="cursor:help; font-size:12px; color:#007bff;">ⓘ</span>
                           </div>
                           
@@ -509,7 +509,7 @@ function initializeExperiment() {
                         <!-- Bottom: Ambivalence Slider -->
                         <div style="flex:0 0 auto; margin-top:0px;">
                           <div style="display:flex; align-items:center; gap:5px; margin-bottom:0px;">
-                            <label style="font-weight:bold; font-size:12px;">Ambivalence:</label>
+                            <label style="font-weight:bold; font-size:12px;">Ambivalence (Whole video):</label>
                             <span class="info-icon" data-info="ambivalence" style="cursor:help; font-size:12px; color:#007bff;">ⓘ</span>
                           </div>
                           <input type="range" min="0" max="6" value="0" step="1" id="slider-ambivalence" style="width:100%; height:10px;">
@@ -559,11 +559,11 @@ function initializeExperiment() {
             on_load: function() {
                 if (!round1Responses[trialNum]) {
                     round1Responses[trialNum] = {
-                        valence: null,
-                        intensity: null,
-                        directness: null,
+                        valence: 0,
+                        intensity: 0,
+                        directness: 0,
                         emotion: null,
-                        ambivalence: null
+                        ambivalence: 0
                     };
                 }
                 const responses = round1Responses[trialNum];
@@ -875,8 +875,8 @@ document.getElementById('next-btn').addEventListener('click', function(e) {
             on_load: function() {
                 if (!round2Responses[trialNum]) {
                     round2Responses[trialNum] = {
-                        valence: null,
-                        intensity: null
+                        valence: 0,
+                        intensity: 0
                     };
                 }
                 const responses = round2Responses[trialNum];
