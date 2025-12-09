@@ -281,7 +281,7 @@ function initializeExperiment() {
         stimulus: `
             <h2>Instructions – Round Two</h2>
             <p>In this part you will see the same videos again, but now one person is highlighted with an arrow.</p>
-            <p>Rate the <strong>intensity</strong> and <strong>valence</strong> of the outlined person only.</p>
+            <p>Rate the <strong>intensity</strong> and <strong>valence</strong> of the appointed person only.</p>
             <p>Click "Continue" to learn more about rating a person.</p>
         `,
         choices: ['Continue']
@@ -809,8 +809,8 @@ document.getElementById('next-btn').addEventListener('click', function(e) {
                       </div>
                       
                       <div style="flex:1; display:flex; flex-direction:column; justify-content:center; padding:20px;">
-                        <h3 style="margin:0 0 10px 0; font-size:20px;">Rate the OUTLINED PERSON</h3>
-                        <p style="margin:0 0 25px 0; font-size:13px; color:#666;">Focus only on the outlined person's facial expression and body language</p>
+                        <h3 style="margin:0 0 10px 0; font-size:20px;">Rate the APPOINTED PERSON</h3>
+                        <p style="margin:0 0 25px 0; font-size:13px; color:#666;">Focus only on the facial expression and body language of the person indicated by the arrow.</p>
                         
                         <!-- Valence Slider -->
                         <div style="margin-bottom:20px;">
