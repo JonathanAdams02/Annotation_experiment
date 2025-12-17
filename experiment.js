@@ -1,9 +1,28 @@
 // ===== TEST MODE CONFIGURATION 
-const TEST_MODE = 1;  // Set to 1 for test mode, 0 for production
+const TEST_MODE = 0;  // Set to 1 for test mode, 0 for production
 // ====================================
 
 // Generate random 4-digit subject ID
 const subjectId = Math.floor(1000 + Math.random() * 9000);
+
+// ===== AUTO ZOOM FUNCTION =====
+// Automatically set browser zoom so that full interface can be displayed on screen
+function applyZoom() {
+    let width = window.screen.width;
+    if (width == 1920) {
+        return;
+    }
+
+    let zoom = 0.01*Math.floor(100*width/1920);
+
+    document.getElementById("jspsych-target").style.transform = "scale(" + zoom + ")";
+    document.getElementById("jspsych-target").style.transformOrigin = "top left";
+}
+
+// Apply zoom when page loads
+// Apply zoom when page loads and when window resizes
+window.addEventListener('load', applyZoom);
+window.addEventListener('resize', applyZoom);
 
 // Load video list from JSON file
 let videoListData = [];
@@ -116,7 +135,9 @@ function initializeExperiment() {
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
                 <p><strong>Items in the room:</strong> Furniture, objects, equipment, guns</p>
                 
-                <p><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
+                <div style="border: 3px solid #ff6b6b; padding: 15px; margin: 20px 0; border-radius: 8px; background-color: #fff5f5;">
+    <p style="margin: 0;"><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
+</div>
             `;
         } else if (type === 'person') {
             content = `
@@ -167,32 +188,49 @@ function initializeExperiment() {
         choices: ['Start']
     };
 
-    const demographicsSurvey = {
-        type: jsPsychSurveyText,
-        questions: [
-            {prompt: "What is your full name?", name: 'name', required: true},
-            {prompt: "What is your student ID?", name: 'student_id', required: true},
-            {prompt: "What is your age?", name: 'age', required: true},
-            {prompt: "What is your gender?", name: 'gender', required: true},
-            {prompt: "What is your handedness? (Left/Right/Both)", name: 'handedness', required: true}
-        ],
-        data: {
-            task: 'demographics',
-            subject_id: subjectId
-        },
-        on_finish: function(data) {
-            saveDemographics({
-                subject_id: subjectId,
-                name: data.response.name,
-                student_id: data.response.student_id,
-                age: data.response.age,
-                gender: data.response.gender,
-                handedness: data.response.handedness,
-                timestamp: new Date().toISOString()
-            });
-        }
-    };
-
+const demographicsSurvey = {
+    type: jsPsychSurveyHtmlForm,
+    html: `
+        <p><label for="name">What is your full name?<br>
+        <input type="text" id="name" name="name" required style="width: 300px; padding: 5px;"></label></p>
+        
+        <p><label for="student_id">What is your student ID?<br>
+        <input type="text" id="student_id" name="student_id" required style="width: 300px; padding: 5px;"></label></p>
+        
+        <p><label for="age">What is your age?<br>
+        <input type="number" id="age" name="age" min="18" max="100" required style="width: 300px; padding: 5px;"></label></p>
+        
+        <p><label for="gender">What is your gender?<br>
+        <select id="gender" name="gender" required style="width: 300px; padding: 5px;">
+            <option value="">--Please select--</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select></label></p>
+        
+        <p><label for="handedness">What is your handedness?<br>
+        <select id="handedness" name="handedness" required style="width: 300px; padding: 5px;">
+            <option value="">--Please select--</option>
+            <option value="Left">Left</option>
+            <option value="Right">Right</option>
+        </select></label></p>
+    `,
+    data: {
+        task: 'demographics',
+        subject_id: subjectId
+    },
+    on_finish: function(data) {
+        saveDemographics({
+            subject_id: subjectId,
+            name: data.response.name,
+            student_id: data.response.student_id,
+            age: data.response.age,
+            gender: data.response.gender,
+            handedness: data.response.handedness,
+            timestamp: new Date().toISOString()
+        });
+    }
+};
     const instructionsRound1 = {
         type: jsPsychHtmlButtonResponse,
         stimulus: `
@@ -224,7 +262,9 @@ function initializeExperiment() {
                 <p><strong>Decoration:</strong> Balloons and confetti (party), flowers and candles (memorial)</p>
                 <p><strong>Items in the room:</strong> Furniture, objects, equipment, guns</p>
                 
-                <p><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
+               <div style="border: 3px solid #ff6b6b; padding: 15px; margin: 20px 0; border-radius: 8px; background-color: #fff5f5;">
+    <p style="margin: 0;"><strong>Important:</strong> When evaluating the setting, try to ignore people's facial expressions and body language. Focus only on what happens <em>around the people</em>.</p>
+</div>
                 
                 <p style="margin-top: 30px;">Click "Continue" to learn about the rating scales.</p>
             </div>
@@ -240,7 +280,7 @@ function initializeExperiment() {
                 
                 <div style="margin-bottom: 25px;">
                     <h3>1. Valence (Setting only)</h3>
-                    <p>We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation. So a black lives matter protest is typically negative (= the participants are not happy) independent of whether you support BLM.</p>
+                    <p>We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation. So protest is typically negative (= the participants are not happy) independent of whether you support the cause.</p>
                     <p>Specifically, we ask you to rate the <strong>valence</strong> ("Negative/Positive") of the overall emotional gist of the setting on a 7-point scale from negative (-3) over neutral (0) to positive (+3).</p>
                 </div>
                 
@@ -260,14 +300,14 @@ function initializeExperiment() {
                 
                 <div style="margin-bottom: 25px;">
                     <h3>4. Emotion (Whole Video)</h3>
-                    <p>We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel called "Plutchik's Wheel of Emotions". If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.</p>
+                    <p>We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel. If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.</p>
                     <p>For a more detailed description of each emotion depicted in this wheel, hover over each emotion segment.</p>
                 </div>
                 
                 <div style="margin-bottom: 25px;">
                     <h3>5. Ambivalence (Whole video)</h3>
                     <p>Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>"Ambivalence"</strong>.</p>
-                    <p>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).</p>
+                    <p>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would be highly ambivalent (6), while only positive cues or only negative cues would result in low ambivalence. (0).</p>
                 </div>
                 
                 <p style="margin-top: 40px; font-weight: bold;">You are now ready to begin Round One. Click "Start Round 1" when ready.</p>
@@ -573,11 +613,11 @@ function initializeExperiment() {
                 
                 // Info tooltip content
                 const infoContent = {
-                    valence: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation. So a black lives matter protest is typically negative (= the participants are not happy) independent of whether you support BLM.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the setting on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
+                    valence: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation. So a protest is typically negative (= the participants are not happy) independent of whether you support the cause.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the setting on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
                     intensity: "We ask you to indicate the emotional characteristic of the SETTING displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>intensity</strong> of the setting, ranging from not intense at all (0) to very intense (6).",
                     directness: "Please rate the directness of the social interaction displayed in the video on a scale from 1 (very indirect) to 6 (very direct).<br><br><strong>Direct interactions</strong> involve people actively communicating or engaging with each other.( e.g. fighting, hugging)<br><br><strong>Indirect interactions</strong> involve people who are in the same setting or context but are not directly engaging with each other. They may be aware of each other's presence but are not actively communicating or interacting (e.g., people sitting separately in a waiting room, individuals in a crowd watching an event, people walking past each other).<br><br>Consider the primary focus of the video when making your rating. If the video shows multiple types of interactions, rate based on the most prominent or salient interaction shown.",
-                    emotion: "We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel called \"Plutchik's Wheel of Emotions\". If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.<br><br>For a more detailed description of each emotion depicted in this wheel, hover over each emotion segment.",
-                    ambivalence: "Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>\"ambivalence\"</strong>.<br><br>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would not be clear (6), while only positive cues or only negative cues would result in a very high clarity (0).",
+                    emotion: "We also ask to indicate an <strong>emotional label</strong> by means of a mouse click on an emotion wheel. If you can't find the perfect emotional label then you choose the 'next best thing', i.e., the one that reflects it most.<br><br>For a more detailed description of each emotion depicted in this wheel, hover over each emotion segment.",
+                    ambivalence: "Please also rate how straightforward the emotional content that is exhibited by the entire video is using the scale indicated with <strong>\"ambivalence\"</strong>.<br><br>For instance, if there are approximately as much emotionally positive as emotionally negative cues in the video, the emotional content would be highy ambivalent (6), while only positive cues or only negative cues would result in low ambivalence (0).",
                     person_valence: "We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>valence</strong> (\"Negative/Positive\") of the overall emotional gist of the person on a 7-point scale from negative (-3) over neutral (0) to positive (+3).",
                     person_intensity: "We ask you to indicate the emotional characteristic of the PERSON displayed in the video, independent of your own political/religious/sexual orientation.<br><br>Specifically, we ask you to rate the <strong>intensity</strong> of the person, ranging from not intense at all (0) to very intense (6)."
                 };
