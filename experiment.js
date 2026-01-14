@@ -194,7 +194,7 @@ const demographicsSurvey = {
         <p><label for="name">What is your full name?<br>
         <input type="text" id="name" name="name" required style="width: 300px; padding: 5px;"></label></p>
         
-        <p><label for="student_id">What is your student ID?<br>
+        <p><label for="student_id">What is your SONA ID code?<br>
         <input type="text" id="student_id" name="student_id" required style="width: 300px; padding: 5px;"></label></p>
         
         <p><label for="age">What is your age?<br>
